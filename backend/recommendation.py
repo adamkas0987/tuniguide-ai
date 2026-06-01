@@ -1,7 +1,7 @@
 # recommendation.py
 import math
 from database import places_collection, restaurants_collection, hotels_collection
-
+from weather import get_weather
 # ──────────────────────────────────────────────
 # Calcul de distance entre deux points GPS (km)
 # ──────────────────────────────────────────────
@@ -82,7 +82,11 @@ def generate_trip(data):
     travel_type = data.get('type', 'culture')
 
     budget_per_day = budget / days
-
+    # Récupérer la météo actuelle
+    current_weather = get_weather(city)
+    is_sunny = current_weather.get('is_sunny', True) if current_weather else True
+    weather_info = current_weather
+    
     # ── Lieux ──────────────────────────────────
     raw_places = list(places_collection.find({"city": city}))
     if not raw_places:
@@ -92,7 +96,11 @@ def generate_trip(data):
         p['_id'] = str(p['_id'])
 
     # Filtrer par budget et trier par score
-    affordable = [p for p in raw_places if p.get('price', 0) <= budget_per_day]
+    affordable = [
+    p for p in raw_places
+    if p.get('price', 0) <= budget_per_day
+    and (p.get('weather') == 'all' or (p.get('weather') == 'sunny' and is_sunny) or p.get('weather') == 'all')
+]
     affordable.sort(
         key=lambda x: calculate_score(x, travel_type, budget_per_day),
         reverse=True
@@ -175,6 +183,7 @@ def generate_trip(data):
         "days":                 days,
         "travel_type":          travel_type,
         "budget":               budget,
+        "weather":              weather_info,
         "itinerary":            itinerary,
         "recommended_restaurant": restaurant,
         "recommended_hotel":    hotel,

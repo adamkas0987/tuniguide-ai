@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from recommendation import generate_trip, find_alternative
 from database import places_collection, restaurants_collection, hotels_collection
-
+from weather import get_weather, get_weather_advice
 app = Flask(__name__)
 CORS(app)
 
@@ -98,6 +98,16 @@ def alternative():
         return jsonify(result)
     else:
         return jsonify({"error": "Aucune alternative trouvée"}), 404
-
+# ──────────────────────────────────────────────
+# Météo d'une ville
+# ──────────────────────────────────────────────
+@app.route('/weather/<city>', methods=['GET'])
+def weather(city):
+    data = get_weather(city)
+    if data:
+        data['advice'] = get_weather_advice(data)
+        return jsonify(data)
+    else:
+        return jsonify({"error": f"Météo non disponible pour '{city}'"}), 404
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
