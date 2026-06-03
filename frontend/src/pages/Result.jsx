@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import MapComponent from '../components/MapComponent'
 import ChatWidget from '../components/ChatWidget'
+import ExportPDF from '../components/ExportPDF'
 
 function Result({ tripData }) {
   const navigate = useNavigate()
@@ -10,11 +11,28 @@ function Result({ tripData }) {
 
   if (!tripData) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-        <p className="text-gray-500 text-lg mb-4">Aucun voyage généré.</p>
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f9fafb'
+      }}>
+        <p style={{ color: '#6b7280', fontSize: '18px', marginBottom: '16px' }}>
+          Aucun voyage généré.
+        </p>
         <button
           onClick={() => navigate('/')}
-          className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700"
+          style={{
+            backgroundColor: '#16a34a',
+            color: 'white',
+            border: 'none',
+            borderRadius: '12px',
+            padding: '12px 24px',
+            fontSize: '14px',
+            cursor: 'pointer'
+          }}
         >
           Planifier un voyage
         </button>
@@ -22,92 +40,148 @@ function Result({ tripData }) {
     )
   }
 
-  const { city, days, travel_type, budget, itinerary, recommended_restaurant, recommended_hotel, cost_summary, weather } = tripData
+  const {
+    city,
+    days,
+    travel_type,
+    budget,
+    itinerary,
+    recommended_restaurant,
+    recommended_hotel,
+    cost_summary,
+    weather
+  } = tripData
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', paddingBottom: '80px' }}>
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white px-6 py-10">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2">
+      <div style={{
+        background: 'linear-gradient(135deg, #16a34a, #2563eb)',
+        color: 'white',
+        padding: '40px 24px'
+      }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <h1 style={{ fontSize: '32px', fontWeight: 'bold', margin: 0 }}>
             🗺️ Votre voyage à {city}
           </h1>
-          <div className="flex flex-wrap gap-4 mt-4 text-sm">
-            <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full">
-              📅 {days} jour{days > 1 ? 's' : ''}
-            </span>
-            <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full">
-              💰 Budget : {budget} DT
-            </span>
-            <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full">
-              🎯 {travel_type}
-            </span>
-            {weather && (
-              <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full">
-                🌤️ {weather.temperature}°C — {weather.description}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>
+            {[
+              `📅 ${days} jour${days > 1 ? 's' : ''}`,
+              `💰 Budget : ${budget} DT`,
+              `🎯 ${travel_type}`,
+              weather ? `🌤️ ${weather.temperature}°C — ${weather.description}` : null
+            ].filter(Boolean).map((item, i) => (
+              <span key={i} style={{
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                padding: '4px 12px',
+                borderRadius: '20px',
+                fontSize: '13px'
+              }}>
+                {item}
               </span>
-            )}
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 mt-8 space-y-8">
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '32px 24px' }}>
 
         {/* Résumé budget */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl p-4 shadow text-center">
-            <div className="text-2xl font-bold text-green-600">{cost_summary.activities} DT</div>
-            <div className="text-sm text-gray-500">Activités</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow text-center">
-            <div className="text-2xl font-bold text-blue-600">{cost_summary.hotel} DT</div>
-            <div className="text-sm text-gray-500">Hôtel</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow text-center">
-            <div className="text-2xl font-bold text-orange-500">{cost_summary.restaurant} DT</div>
-            <div className="text-sm text-gray-500">Restaurant</div>
-          </div>
-          <div className={`rounded-xl p-4 shadow text-center ${cost_summary.remaining_budget >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
-            <div className={`text-2xl font-bold ${cost_summary.remaining_budget >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {cost_summary.remaining_budget} DT
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+          gap: '16px',
+          marginBottom: '32px'
+        }}>
+          {[
+            { label: 'Activités',  value: cost_summary.activities,       color: '#16a34a' },
+            { label: 'Hôtel',      value: cost_summary.hotel,            color: '#2563eb' },
+            { label: 'Restaurant', value: cost_summary.restaurant,       color: '#f97316' },
+            {
+              label: 'Restant',
+              value: cost_summary.remaining_budget,
+              color: cost_summary.remaining_budget >= 0 ? '#16a34a' : '#dc2626',
+              bg: cost_summary.remaining_budget >= 0 ? '#f0fdf4' : '#fef2f2'
+            },
+          ].map((item, i) => (
+            <div key={i} style={{
+              backgroundColor: item.bg || 'white',
+              borderRadius: '12px',
+              padding: '16px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: item.color }}>
+                {item.value} DT
+              </div>
+              <div style={{ fontSize: '13px', color: '#6b7280', marginTop: '4px' }}>
+                {item.label}
+              </div>
             </div>
-            <div className="text-sm text-gray-500">Restant</div>
-          </div>
+          ))}
         </div>
 
         {/* Itinéraire */}
-        <div className="bg-white rounded-2xl shadow p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">📋 Itinéraire jour par jour</h2>
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '16px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+          padding: '24px',
+          marginBottom: '24px'
+        }}>
+          <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1f2937', marginBottom: '16px' }}>
+            📋 Itinéraire jour par jour
+          </h2>
 
           {/* Onglets jours */}
-          <div className="flex gap-2 mb-6 flex-wrap">
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
             {itinerary.map(item => (
               <button
                 key={item.day}
                 onClick={() => setActiveDay(item.day)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
-                  activeDay === item.day
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  backgroundColor: activeDay === item.day ? '#16a34a' : '#f3f4f6',
+                  color: activeDay === item.day ? 'white' : '#374151'
+                }}
               >
                 Jour {item.day}
               </button>
             ))}
           </div>
 
-          {/* Détail du jour actif */}
+          {/* Détail jour actif */}
           {itinerary.filter(item => item.day === activeDay).map(item => (
-            <div key={item.day} className="border border-green-200 rounded-xl p-5 bg-green-50">
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="text-lg font-bold text-gray-800">{item.activity}</h3>
-                <span className="bg-green-600 text-white text-sm px-3 py-1 rounded-full">
+            <div key={item.day} style={{
+              border: '1px solid #bbf7d0',
+              borderRadius: '12px',
+              padding: '20px',
+              backgroundColor: '#f0fdf4'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
+                  {item.activity}
+                </h3>
+                <span style={{
+                  backgroundColor: '#16a34a',
+                  color: 'white',
+                  fontSize: '12px',
+                  padding: '4px 12px',
+                  borderRadius: '20px'
+                }}>
                   {item.cost === 0 ? 'Gratuit' : `${item.cost} DT`}
                 </span>
               </div>
-              <p className="text-gray-600 text-sm mb-3">{item.description?.slice(0, 200)}</p>
-              <div className="flex gap-4 text-sm text-gray-500">
+              <p style={{ color: '#4b5563', fontSize: '13px', marginBottom: '12px' }}>
+                {item.description?.slice(0, 200)}
+              </p>
+              <div style={{ display: 'flex', gap: '16px', fontSize: '13px', color: '#6b7280' }}>
                 <span>⏱️ {item.duration_hours}h</span>
                 <span>⭐ {item.rating}/5</span>
                 <span>🎯 {item.type}</span>
@@ -117,46 +191,97 @@ function Result({ tripData }) {
         </div>
 
         {/* Restaurant + Hôtel */}
-        <div className="grid md:grid-cols-2 gap-4">
-
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '16px',
+          marginBottom: '24px'
+        }}>
           {recommended_restaurant && (
-            <div className="bg-white rounded-2xl shadow p-6">
-              <h2 className="text-lg font-bold text-gray-800 mb-3">🍽️ Restaurant recommandé</h2>
-              <div className="text-green-700 font-semibold">{recommended_restaurant.name}</div>
-              <div className="text-sm text-gray-500 mt-1">{recommended_restaurant.cuisine}</div>
-              <div className="text-sm text-gray-600 mt-2">
+            <div style={{
+              backgroundColor: 'white',
+              borderRadius: '16px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+              padding: '20px'
+            }}>
+              <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '12px' }}>
+                🍽️ Restaurant recommandé
+              </h2>
+              <div style={{ color: '#15803d', fontWeight: '600', fontSize: '15px' }}>
+                {recommended_restaurant.name}
+              </div>
+              <div style={{ color: '#6b7280', fontSize: '13px', marginTop: '4px' }}>
+                {recommended_restaurant.cuisine}
+              </div>
+              <div style={{ color: '#4b5563', fontSize: '13px', marginTop: '8px' }}>
                 💰 {recommended_restaurant.price_per_person} DT/personne
               </div>
-              <div className="text-sm text-gray-600">⭐ {recommended_restaurant.rating}/5</div>
+              <div style={{ color: '#4b5563', fontSize: '13px' }}>
+                ⭐ {recommended_restaurant.rating}/5
+              </div>
             </div>
           )}
 
           {recommended_hotel && (
-            <div className="bg-white rounded-2xl shadow p-6">
-              <h2 className="text-lg font-bold text-gray-800 mb-3">🏨 Hôtel recommandé</h2>
-              <div className="text-blue-700 font-semibold">{recommended_hotel.name}</div>
-              <div className="text-sm text-gray-500 mt-1">{'⭐'.repeat(recommended_hotel.stars)}</div>
-              <div className="text-sm text-gray-600 mt-2">
+            <div style={{
+              backgroundColor: 'white',
+              borderRadius: '16px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+              padding: '20px'
+            }}>
+              <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '12px' }}>
+                🏨 Hôtel recommandé
+              </h2>
+              <div style={{ color: '#1d4ed8', fontWeight: '600', fontSize: '15px' }}>
+                {recommended_hotel.name}
+              </div>
+              <div style={{ color: '#6b7280', fontSize: '13px', marginTop: '4px' }}>
+                {'⭐'.repeat(recommended_hotel.stars)}
+              </div>
+              <div style={{ color: '#4b5563', fontSize: '13px', marginTop: '8px' }}>
                 💰 {recommended_hotel.price_per_night} DT/nuit
               </div>
-              <div className="text-sm text-gray-600">⭐ {recommended_hotel.rating}/5</div>
+              <div style={{ color: '#4b5563', fontSize: '13px' }}>
+                ⭐ {recommended_hotel.rating}/5
+              </div>
             </div>
           )}
         </div>
 
         {/* Carte */}
-        <div className="bg-white rounded-2xl shadow p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">🗺️ Carte du voyage</h2>
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '16px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+          padding: '24px',
+          marginBottom: '24px'
+        }}>
+          <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1f2937', marginBottom: '16px' }}>
+            🗺️ Carte du voyage
+          </h2>
           <MapComponent itinerary={itinerary} city={city} />
         </div>
 
-        {/* Bouton retour */}
-        <button
-          onClick={() => navigate('/')}
-          className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 rounded-xl transition"
-        >
-          ← Planifier un nouveau voyage
-        </button>
+        {/* Boutons */}
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <ExportPDF tripData={tripData} />
+          <button
+            onClick={() => navigate('/')}
+            style={{
+              flex: 1,
+              backgroundColor: '#e5e7eb',
+              color: '#374151',
+              border: 'none',
+              borderRadius: '12px',
+              padding: '12px 24px',
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer'
+            }}
+          >
+            ← Planifier un nouveau voyage
+          </button>
+        </div>
 
       </div>
 
