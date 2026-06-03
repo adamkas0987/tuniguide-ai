@@ -15,6 +15,9 @@ function Navbar() {
         <Link to="/result" className="text-gray-600 hover:text-green-600 font-medium transition">
           Mon Voyage
         </Link>
+        <Link to="/dashboard" className="text-gray-600 hover:text-green-600 font-medium transition">
+        Dashboard
+        </Link>
         <a href="https://github.com/adamkas0987/tuniguide-ai" target="_blank" rel="noreferrer" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm font-medium">
           GitHub
         </a>
