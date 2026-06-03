@@ -144,6 +144,11 @@ def generate_trip(data):
     itinerary  = []
     total_cost = 0
     used_names = []
+    used_restaurants = []
+
+    # Trier les restaurants par note
+    if restaurants:
+        restaurants.sort(key=lambda x: x.get('rating', 0), reverse=True)
 
     for day in range(1, days + 1):
         day_place = None
@@ -153,11 +158,22 @@ def generate_trip(data):
                 used_names.append(place['name'])
                 break
 
-        # Si pas de lieu trouvé, chercher alternative
         if not day_place:
             day_place = find_alternative(city, travel_type, used_names)
             if day_place:
                 used_names.append(day_place['name'])
+
+        # Restaurant du jour
+        day_restaurant = None
+        for r in restaurants:
+            if r['name'] not in used_restaurants:
+                day_restaurant = r
+                used_restaurants.append(r['name'])
+                break
+        if not day_restaurant and restaurants:
+            used_restaurants = []
+            day_restaurant = restaurants[0]
+            used_restaurants.append(day_restaurant['name'])
 
         if day_place:
             itinerary.append({
@@ -169,7 +185,14 @@ def generate_trip(data):
                 "cost":           day_place.get('price', 0),
                 "lat":            day_place.get('lat'),
                 "lng":            day_place.get('lng'),
-                "rating":         day_place.get('rating', 0)
+                "rating":         day_place.get('rating', 0),
+                "restaurant":     {
+                    "_id":              str(day_restaurant['_id']) if day_restaurant else None,
+                    "name":             day_restaurant.get('name', '') if day_restaurant else '',
+                    "cuisine":          day_restaurant.get('cuisine', '') if day_restaurant else '',
+                    "price_per_person": day_restaurant.get('price_per_person', 0) if day_restaurant else 0,
+                    "rating":           day_restaurant.get('rating', 0) if day_restaurant else 0,
+                } if day_restaurant else None
             })
             total_cost += day_place.get('price', 0)
 

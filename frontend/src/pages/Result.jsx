@@ -131,7 +131,7 @@ function Result({ tripData }) {
           boxShadow: '0 4px 20px rgba(0,0,0,0.08)', padding: '28px',
           marginBottom: '20px', border: '1px solid #f3f4f6'
         }}>
-          <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', marginBottom: '20px' }}>
             📋 Itinéraire jour par jour
           </h2>
 
@@ -158,6 +158,7 @@ function Result({ tripData }) {
               borderRadius: '16px', padding: '24px',
               background: `linear-gradient(135deg, ${accentColor}08, white)`
             }}>
+              {/* Activité */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
                   {item.activity}
@@ -170,10 +171,13 @@ function Result({ tripData }) {
                   {item.cost === 0 ? '✨ Gratuit' : `${item.cost} DT`}
                 </span>
               </div>
+
               <p style={{ color: '#4b5563', fontSize: '14px', marginBottom: '16px', lineHeight: '1.6' }}>
                 {item.description?.slice(0, 200)}
               </p>
-              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+
+              {/* Tags */}
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '16px' }}>
                 {[
                   { icon: '⏱️', text: `${item.duration_hours}h` },
                   { icon: '⭐', text: `${item.rating}/5` },
@@ -187,74 +191,71 @@ function Result({ tripData }) {
                   </span>
                 ))}
               </div>
+
+              {/* Restaurant du jour */}
+              {item.restaurant && (
+                <div style={{
+                  backgroundColor: '#fffbeb', border: '1px solid #fde68a',
+                  borderRadius: '12px', padding: '12px 16px',
+                  display: 'flex', alignItems: 'center', gap: '12px'
+                }}>
+                  <span style={{ fontSize: '24px' }}>🍽️</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: '600', color: '#92400e', fontSize: '14px' }}>
+                      {item.restaurant.name}
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                      {item.restaurant.cuisine} • {item.restaurant.price_per_person} DT/pers • ⭐ {item.restaurant.rating}/5
+                    </div>
+                  </div>
+                  <span style={{
+                    backgroundColor: '#fef3c7', color: '#92400e',
+                    padding: '4px 10px', borderRadius: '20px',
+                    fontSize: '11px', fontWeight: '600', whiteSpace: 'nowrap'
+                  }}>
+                    🍜 Restaurant du jour
+                  </span>
+                </div>
+              )}
             </div>
           ))}
         </div>
 
-        {/* ── RESTAURANT + HOTEL ───────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
-          {recommended_restaurant && (
-            <div style={{
-              backgroundColor: 'white', borderRadius: '20px',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.08)', padding: '24px',
-              border: '1px solid #fde68a'
-            }}>
-              <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                🍽️ Restaurant recommandé
-              </h2>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                <div style={{
-                  width: '44px', height: '44px', borderRadius: '12px',
-                  backgroundColor: '#fef3c7', display: 'flex', alignItems: 'center',
-                  justifyContent: 'center', fontSize: '22px', flexShrink: 0
-                }}>🍜</div>
-                <div>
-                  <div style={{ fontWeight: '700', color: '#92400e', fontSize: '15px' }}>{recommended_restaurant.name}</div>
-                  <div style={{ color: '#6b7280', fontSize: '13px' }}>{recommended_restaurant.cuisine}</div>
+        {/* ── HOTEL ────────────────────────────── */}
+        {recommended_hotel && (
+          <div style={{
+            backgroundColor: 'white', borderRadius: '20px',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.08)', padding: '24px',
+            marginBottom: '20px', border: '1px solid #bfdbfe'
+          }}>
+            <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '16px' }}>
+              🏨 Hôtel recommandé pour tout le séjour
+            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{
+                width: '52px', height: '52px', borderRadius: '14px',
+                backgroundColor: '#eff6ff', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', fontSize: '26px', flexShrink: 0
+              }}>🏨</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: '700', color: '#1e40af', fontSize: '16px' }}>
+                  {recommended_hotel.name}
+                </div>
+                <div style={{ color: '#6b7280', fontSize: '13px', marginTop: '2px' }}>
+                  {'⭐'.repeat(recommended_hotel.stars)}
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <span style={{ backgroundColor: '#fef3c7', color: '#92400e', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '600' }}>
-                  💰 {recommended_restaurant.price_per_person} DT/pers
-                </span>
-                <span style={{ backgroundColor: '#fef3c7', color: '#92400e', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '600' }}>
-                  ⭐ {recommended_restaurant.rating}/5
-                </span>
-              </div>
-            </div>
-          )}
-
-          {recommended_hotel && (
-            <div style={{
-              backgroundColor: 'white', borderRadius: '20px',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.08)', padding: '24px',
-              border: '1px solid #bfdbfe'
-            }}>
-              <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                🏨 Hôtel recommandé
-              </h2>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                <div style={{
-                  width: '44px', height: '44px', borderRadius: '12px',
-                  backgroundColor: '#eff6ff', display: 'flex', alignItems: 'center',
-                  justifyContent: 'center', fontSize: '22px', flexShrink: 0
-                }}>🏨</div>
-                <div>
-                  <div style={{ fontWeight: '700', color: '#1e40af', fontSize: '15px' }}>{recommended_hotel.name}</div>
-                  <div style={{ color: '#6b7280', fontSize: '13px' }}>{'⭐'.repeat(recommended_hotel.stars)}</div>
-                </div>
-              </div>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <span style={{ backgroundColor: '#eff6ff', color: '#1e40af', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '600' }}>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <span style={{ backgroundColor: '#eff6ff', color: '#1e40af', padding: '6px 14px', borderRadius: '20px', fontSize: '13px', fontWeight: '600' }}>
                   💰 {recommended_hotel.price_per_night} DT/nuit
                 </span>
-                <span style={{ backgroundColor: '#eff6ff', color: '#1e40af', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '600' }}>
+                <span style={{ backgroundColor: '#eff6ff', color: '#1e40af', padding: '6px 14px', borderRadius: '20px', fontSize: '13px', fontWeight: '600' }}>
                   ⭐ {recommended_hotel.rating}/5
                 </span>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* ── CARTE ────────────────────────────── */}
         <div style={{
