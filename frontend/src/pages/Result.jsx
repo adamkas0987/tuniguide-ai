@@ -1,13 +1,21 @@
 // src/pages/Result.jsx
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import MapComponent from '../components/MapComponent'
 import ChatWidget from '../components/ChatWidget'
 import ExportPDF from '../components/ExportPDF'
+import { useAuth } from '../context/AuthContext'
 
 function Result({ tripData }) {
   const navigate = useNavigate()
   const [activeDay, setActiveDay] = useState(1)
+  const { user, saveTrip } = useAuth()
+
+  useEffect(() => {
+    if (tripData && user) {
+      saveTrip(tripData).catch(err => console.error(err))
+    }
+  }, [tripData, user])
 
   if (!tripData) {
     return (
@@ -82,6 +90,11 @@ function Result({ tripData }) {
               </span>
             ))}
           </div>
+          {user && (
+            <p style={{ fontSize: '13px', marginTop: '12px', opacity: 0.8 }}>
+              ✅ Voyage sauvegardé dans votre historique
+            </p>
+          )}
         </div>
       </div>
 

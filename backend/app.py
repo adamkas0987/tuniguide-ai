@@ -1,13 +1,16 @@
 # app.py
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from flask_jwt_extended import jwt_required
 from recommendation import generate_trip, find_alternative
 from database import places_collection, restaurants_collection, hotels_collection
 from weather import get_weather, get_weather_advice
 from agent import chat_with_agent
+from auth import init_jwt, register_user, login_user, save_trip, get_user_trips, get_profile
 
 app = Flask(__name__)
 CORS(app)
+jwt = init_jwt(app)
 
 # ──────────────────────────────────────────────
 # Vérification API
@@ -131,6 +134,44 @@ def chat():
 
     result = chat_with_agent(message, conversation_history, trip_context)
     return jsonify(result)
+
+# ──────────────────────────────────────────────
+# Auth — Register
+# ──────────────────────────────────────────────
+@app.route('/register', methods=['POST'])
+def register():
+    return register_user()
+
+# ──────────────────────────────────────────────
+# Auth — Login
+# ──────────────────────────────────────────────
+@app.route('/login', methods=['POST'])
+def login():
+    return login_user()
+
+# ──────────────────────────────────────────────
+# Auth — Profil utilisateur
+# ──────────────────────────────────────────────
+@app.route('/profile', methods=['GET'])
+@jwt_required()
+def profile():
+    return get_profile()
+
+# ──────────────────────────────────────────────
+# Auth — Sauvegarder un voyage
+# ──────────────────────────────────────────────
+@app.route('/trips/save', methods=['POST'])
+@jwt_required()
+def save_trip_route():
+    return save_trip()
+
+# ──────────────────────────────────────────────
+# Auth — Historique des voyages
+# ──────────────────────────────────────────────
+@app.route('/trips/history', methods=['GET'])
+@jwt_required()
+def trips_history():
+    return get_user_trips()
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
