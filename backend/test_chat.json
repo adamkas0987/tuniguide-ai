@@ -1,0 +1,13 @@
+{
+  "message": "Bonjour, le musee est ferme que faire ?",
+  "history": [],
+  "trip_context": {
+    "city": "Sousse",
+    "days": 3,
+    "budget": 400,
+    "travel_type": "culture",
+    "itinerary": [
+      {"day": 1, "activity": "Medina de Sousse"}
+    ]
+  }
+}
