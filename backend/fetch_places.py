@@ -58,16 +58,18 @@ def get_place_details(xid):
 def detect_type(kinds):
     """Détecte le type de voyage selon les kinds OpenTripMap."""
     kinds = kinds.lower()
-    if "beach" in kinds:
+    if "beach" in kinds or "water" in kinds or "coast" in kinds:
         return "beach"
-    elif "cultural" in kinds or "historic" in kinds or "museum" in kinds:
-        return "culture"
-    elif "natural" in kinds or "park" in kinds:
+    elif "natural" in kinds or "park" in kinds or "garden" in kinds or "nature" in kinds:
         return "relax"
-    elif "religion" in kinds or "mosque" in kinds:
+    elif "sport" in kinds or "amusement" in kinds or "leisure" in kinds:
+        return "adventure"
+    elif "religion" in kinds or "mosque" in kinds or "church" in kinds:
+        return "culture"
+    elif "historic" in kinds or "museum" in kinds or "cultural" in kinds or "architecture" in kinds:
         return "culture"
     else:
-        return "culture"
+        return "relax"
 
 def fetch_and_save_all():
     """Récupère tous les lieux et les sauvegarde dans MongoDB."""
