@@ -4,7 +4,7 @@ import axios from 'axios'
 
 const AuthContext = createContext(null)
 
-const API = 'http://127.0.0.1:5000'
+const API = 'https://tuniguide-backend.onrender.com'
 
 export function AuthProvider({ children }) {
   const [user, setUser]   = useState(null)

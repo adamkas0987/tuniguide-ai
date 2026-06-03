@@ -7,7 +7,7 @@ import {
 import { getCities } from '../services/api'
 import axios from 'axios'
 
-const API = 'http://127.0.0.1:5000'
+const API = 'https://tuniguide-backend.onrender.com'
 
 const COLORS = ['#16a34a', '#2563eb', '#d97706', '#dc2626', '#7c3aed', '#0891b2']
 
