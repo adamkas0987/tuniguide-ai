@@ -321,20 +321,44 @@ def get_bookings():
     return jsonify(bookings)
 
 # ──────────────────────────────────────────────
-# Images Wikimedia Commons pour un lieu
+# Images Wikipedia pour un lieu
 # ──────────────────────────────────────────────
 @app.route('/image/<path:place_name>', methods=['GET'])
 def get_place_image(place_name):
-    try:
-        url = "https://en.wikipedia.org/api/rest_v1/page/summary/" + place_name.replace(' ', '_')
-        response = requests.get(url, timeout=5)
-        if response.status_code == 200:
-            data = response.json()
-            image = data.get('thumbnail', {}).get('source', None)
-            if image:
-                return jsonify({"image": image, "source": "wikipedia"})
-    except:
-        pass
+    # Liste de recherches à essayer
+    search_terms = [
+        place_name,
+        place_name + " Tunisia",
+        place_name + " Tunisie",
+    ]
+    
+    for term in search_terms:
+        try:
+            url = "https://en.wikipedia.org/api/rest_v1/page/summary/" + term.replace(' ', '_')
+            response = requests.get(url, timeout=5)
+            if response.status_code == 200:
+                data = response.json()
+                image = data.get('thumbnail', {}).get('source', None)
+                if image:
+                    return jsonify({"image": image, "source": "wikipedia"})
+        except:
+            pass
+    
+    # Images de fallback par ville depuis Wikimedia
+    fallbacks = {
+        "Tunis":    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Tunis_Medina.jpg/400px-Tunis_Medina.jpg",
+        "Sousse":   "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/2009-06-15_Sousse_Medina.jpg/400px-2009-06-15_Sousse_Medina.jpg",
+        "Djerba":   "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Djerba_island.jpg/400px-Djerba_island.jpg",
+        "Kairouan": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Great_Mosque_of_Kairouan.jpg/400px-Great_Mosque_of_Kairouan.jpg",
+        "Sfax":     "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Sfax_medina.jpg/400px-Sfax_medina.jpg",
+        "El Jem":   "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/El_Jem_amphitheatre.jpg/400px-El_Jem_amphitheatre.jpg",
+    }
+    
+    # Chercher si le nom contient une ville connue
+    for city, img in fallbacks.items():
+        if city.lower() in place_name.lower():
+            return jsonify({"image": img})
+    
     return jsonify({"image": None})
 
 if __name__ == '__main__':
