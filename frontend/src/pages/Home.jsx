@@ -317,23 +317,26 @@ export default function Home({ setTripData }) {
       </div>
 
       {/* ── DESTINATIONS ────────────────────── */}
-      <div style={{ padding: '16px 24px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-          <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937' }}>{t.destinations.title}</div>
-          <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ fontSize: '12px', color: '#1D9E75', cursor: 'pointer' }}>{t.destinations.seeAll} ›</div>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '8px' }}>
-          {CITIES_CONFIG.map(city => (
-            <div key={city.name} onClick={() => { setFormData(f => ({ ...f, city: city.name })); setActiveTab('plan'); window.scrollTo({ top: 0, behavior: 'smooth' }) }} style={{ borderRadius: '10px', overflow: 'hidden', cursor: 'pointer', height: '110px', background: city.bg, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '8px', position: 'relative', border: formData.city === city.name ? '2px solid #4ade80' : '2px solid transparent', transition: 'all 0.2s' }}>
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)' }} />
-              <div style={{ position: 'relative', zIndex: 2 }}>
-                <div style={{ color: 'white', fontSize: '12px', fontWeight: '500' }}>{city.emoji} {city.name}</div>
-                <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: '10px' }}>{cities.includes(city.name) ? `20 ${t.destinations.places}` : ''}</div>
-              </div>
-            </div>
-          ))}
+<div style={{ padding: '16px 24px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
+  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+    <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937' }}>{t.destinations.title}</div>
+    <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ fontSize: '12px', color: '#1D9E75', cursor: 'pointer' }}>{t.destinations.seeAll} ›</div>
+  </div>
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '8px' }}>
+    {CITIES_CONFIG.map(city => (
+      <div key={city.name} onClick={() => navigate(`/destination/${city.name}`)} style={{ borderRadius: '10px', overflow: 'hidden', cursor: 'pointer', height: '110px', background: city.bg, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '8px', position: 'relative', border: '2px solid transparent', transition: 'all 0.2s' }}
+        onMouseEnter={e => e.currentTarget.style.border = '2px solid #4ade80'}
+        onMouseLeave={e => e.currentTarget.style.border = '2px solid transparent'}
+      >
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)' }} />
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          <div style={{ color: 'white', fontSize: '12px', fontWeight: '500' }}>{city.emoji} {city.name}</div>
+          <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: '10px' }}>{cities.includes(city.name) ? `20 ${t.destinations.places}` : ''}</div>
         </div>
       </div>
+    ))}
+  </div>
+</div>
 
       {/* ── ITINERAIRES ─────────────────────── */}
       <div style={{ padding: '16px 24px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>

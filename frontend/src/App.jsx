@@ -10,6 +10,8 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import History from './pages/History'
 import Rewards from './pages/Rewards'
+import Destination from './pages/Destination'
+import Booking from './pages/Booking'
 
 function App() {
   const [tripData, setTripData] = useState(null)
@@ -27,6 +29,8 @@ function App() {
             <Route path="/register"  element={<Register />} />
             <Route path="/history"   element={<History />} />
             <Route path="/rewards" element={<Rewards />} />
+            <Route path="/destination/:city" element={<Destination />} />
+            <Route path="/booking/:type/:name/:city/:price" element={<Booking />} />
           </Routes>
         </div>
       </Router>
