@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getDestination } from '../services/api.js'
 import PlaceImage from '../components/PlaceImage'
+import RatingStars from '../components/RatingStars'
 
 export default function Destination() {
   const { city } = useParams()
@@ -109,11 +110,16 @@ export default function Destination() {
           <p style={{ fontSize: '12px', color: '#6b7280', lineHeight: '1.5', marginBottom: '10px' }}>
             {(place.description || '').slice(0, 100)}
           </p>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '10px' }}>
             <span style={{ background: '#f3f4f6', color: '#374151', fontSize: '11px', padding: '3px 8px', borderRadius: '20px' }}>🎯 {place.type}</span>
-            <span style={{ background: '#f3f4f6', color: '#374151', fontSize: '11px', padding: '3px 8px', borderRadius: '20px' }}>⭐ {place.rating}/5</span>
             <span style={{ background: '#f3f4f6', color: '#374151', fontSize: '11px', padding: '3px 8px', borderRadius: '20px' }}>⏱️ {place.duration}h</span>
           </div>
+          <RatingStars
+            placeName={place.name}
+            city={data.city}
+            initialRating={place.rating}
+            initialCount={place.ratings_count || 0}
+          />
         </div>
       </div>
     ))}

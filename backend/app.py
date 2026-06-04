@@ -361,5 +361,67 @@ def get_place_image(place_name):
     
     return jsonify({"image": None})
 
+# ──────────────────────────────────────────────
+# Notation — Noter un lieu
+# ──────────────────────────────────────────────
+@app.route('/ratings', methods=['POST'])
+def add_rating():
+    data = request.json
+    if not data:
+        return jsonify({"error": "Données manquantes"}), 400
+
+    place_name = data.get('place_name')
+    city       = data.get('city')
+    rating     = int(data.get('rating', 5))
+    user_name  = data.get('user_name', 'Anonyme')
+
+    if not place_name or not city:
+        return jsonify({"error": "place_name et city requis"}), 400
+
+    # Sauvegarder la note
+    db["ratings"].insert_one({
+        "place_name": place_name,
+        "city":       city,
+        "rating":     rating,
+        "user_name":  user_name,
+        "created_at": datetime.now().isoformat()
+    })
+
+    # Calculer la nouvelle moyenne
+    all_ratings = list(db["ratings"].find({"place_name": place_name}))
+    avg = round(sum(r['rating'] for r in all_ratings) / len(all_ratings), 1)
+    count = len(all_ratings)
+
+    # Mettre à jour dans places_collection
+    places_collection.update_one(
+        {"name": place_name},
+        {"$set": {"rating": avg, "ratings_count": count}}
+    )
+
+    return jsonify({
+        "message": "Note ajoutée",
+        "average": avg,
+        "count": count
+    })
+
+# ──────────────────────────────────────────────
+# Notation — Récupérer les notes d'un lieu
+# ──────────────────────────────────────────────
+@app.route('/ratings/<path:place_name>', methods=['GET'])
+def get_ratings(place_name):
+    ratings = list(db["ratings"].find({"place_name": place_name}))
+    if not ratings:
+        return jsonify({"average": 0, "count": 0, "ratings": []})
+
+    avg = round(sum(r['rating'] for r in ratings) / len(ratings), 1)
+    for r in ratings:
+        r['_id'] = str(r['_id'])
+
+    return jsonify({
+        "average": avg,
+        "count":   len(ratings),
+        "ratings": ratings
+    })
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
