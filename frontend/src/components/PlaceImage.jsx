@@ -43,10 +43,11 @@ const TYPE_FALLBACKS = {
 }
 
 function getImage(name, type) {
-  if (!name) return TYPE_FALLBACKS[type] || TYPE_FALLBACKS.default
+  if (!name || typeof name !== 'string') {
+    return TYPE_FALLBACKS[type] || TYPE_FALLBACKS.default
+  }
   const lower = name.toLowerCase()
-  const entries = Object.entries(PLACE_IMAGES)
-  for (const [key, url] of entries) {
+  for (const [key, url] of Object.entries(PLACE_IMAGES)) {
     if (lower.includes(key)) return url
   }
   return TYPE_FALLBACKS[type] || TYPE_FALLBACKS.default
@@ -54,6 +55,13 @@ function getImage(name, type) {
 
 export default function PlaceImage({ name, type, style = {} }) {
   const [error, setError] = useState(false)
+  
+  if (!name && !type) return (
+    <div style={{ background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', ...style }}>
+      <span style={{ fontSize: '24px' }}>🏛️</span>
+    </div>
+  )
+  
   const src = getImage(name, type)
   const fallback = TYPE_FALLBACKS[type] || TYPE_FALLBACKS.default
 
