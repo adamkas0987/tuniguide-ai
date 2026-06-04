@@ -32,7 +32,7 @@ const TRANSLATIONS = {
     aboutLinks: ["À propos de TuniGuide AI", "Notre équipe", "Carrières", "Conditions d'utilisation", "Confidentialité"],
     serviceLinks: ["API TuniGuide", "Programme partenaires", "Inscrire votre établissement", "Toutes les villes", "Devenir fournisseur"],
     contactLinks: ["🎧 Support client", "🛡️ Garantie service", "ℹ️ Centre d'aide", "📧 contact@tuniguide.ai"],
-    payment: 'Paiement',
+    payment: 'Paiement', search: 'Rechercher'
   },
   en: {
     nav: { home: 'Home', dashboard: 'Dashboard', rewards: 'Rewards', trips: 'My trips', login: 'Login', register: 'Sign up' },
@@ -51,7 +51,7 @@ const TRANSLATIONS = {
     aboutLinks: ["About TuniGuide AI", "Our team", "Careers", "Terms of use", "Privacy"],
     serviceLinks: ["TuniGuide API", "Partner program", "List your property", "All cities", "Become a supplier"],
     contactLinks: ["🎧 Customer support", "🛡️ Service guarantee", "ℹ️ Help center", "📧 contact@tuniguide.ai"],
-    payment: 'Payment',
+    payment: 'Payment', search: 'Search'
   }
 }
 
@@ -170,6 +170,7 @@ export default function Home({ setTripData }) {
           <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
             {[
               { key: 'home', path: '/' },
+              { key: 'search', path: '/search' },
               { key: 'dashboard', path: '/dashboard' },
               { key: 'rewards', path: '/rewards' },
               ...(user ? [{ key: 'trips', path: '/history' }] : []),
