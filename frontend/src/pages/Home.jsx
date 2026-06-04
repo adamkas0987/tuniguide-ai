@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { generateTrip, getCities, getWeather, getReviews, postReview } from '../services/api.js'
 import { useAuth } from '../context/AuthContext'
 import { getRewardsPoints } from '../services/api.js'
+import TunisiaMap from '../components/TunisiaMap'
+
 
 const CITIES_CONFIG = [
   { name: 'Tunis',    emoji: '🕌', bg: 'linear-gradient(160deg,#0a2342 0%,#1a4a7a 60%,#0f6e56 100%)', desc: 'Médinas, musées, patrimoine UNESCO' },
@@ -331,6 +333,11 @@ export default function Home({ setTripData }) {
       </div>
     </div>
   </div>
+</div>
+
+      {/* ── CARTE INTERACTIVE ───────────────── */}
+<div style={{ padding: '16px 24px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
+  <TunisiaMap lang={lang} />
 </div>
 
       {/* ── DESTINATIONS ────────────────────── */}
