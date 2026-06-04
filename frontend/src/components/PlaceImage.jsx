@@ -1,41 +1,60 @@
 // src/components/PlaceImage.jsx
 import { useState } from 'react'
 
-const CITY_IMAGES = {
-  'Medina': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/2009-06-15_Sousse_Medina.jpg/400px-2009-06-15_Sousse_Medina.jpg',
-  'Tunis':  'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Tunis_medina_overview.jpg/400px-Tunis_medina_overview.jpg',
-  'Bardo':  'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Bardo_National_Museum.jpg/400px-Bardo_National_Museum.jpg',
-  'Kairouan': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Great_Mosque_of_Kairouan_court.jpg/400px-Great_Mosque_of_Kairouan_court.jpg',
-  'El Jem': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/ElDjemColosseum.jpg/400px-ElDjemColosseum.jpg',
-  'Djerba': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Djerba_Tunisia.jpg/400px-Djerba_Tunisia.jpg',
-  'Sidi Bou': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Sidi_Bou_Said_1.jpg/400px-Sidi_Bou_Said_1.jpg',
-  'Ribat':  'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Ribat_of_Sousse.jpg/400px-Ribat_of_Sousse.jpg',
-  'Mosque': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Mosque_Uqba.jpg/400px-Mosque_Uqba.jpg',
-  'Museum': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Bardo_National_Museum.jpg/400px-Bardo_National_Museum.jpg',
-  'Beach':  'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Hammamet_beach.jpg/400px-Hammamet_beach.jpg',
-  'Port':   'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Port_El_Kantaoui.jpg/400px-Port_El_Kantaoui.jpg',
+const PLACE_IMAGES = {
+  // Lieux spécifiques
+  'medina':     'https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=400&q=80',
+  'mosque':     'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=400&q=80',
+  'museum':     'https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?w=400&q=80',
+  'amphitheatre': 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&q=80',
+  'beach':      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80',
+  'port':       'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80',
+  'jardin':     'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400&q=80',
+  'garden':     'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400&q=80',
+  'synagogue':  'https://images.unsplash.com/photo-1519817650390-64a93db51149?w=400&q=80',
+  'cemetery':   'https://images.unsplash.com/photo-1519817650390-64a93db51149?w=400&q=80',
+  'ribat':      'https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=400&q=80',
+  'kasbah':     'https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=400&q=80',
+  'bardo':      'https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?w=400&q=80',
+  'sousse':     'https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=400&q=80',
+  'tunis':      'https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=400&q=80',
+  'djerba':     'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80',
+  'kairouan':   'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=400&q=80',
+  'sfax':       'https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=400&q=80',
+  'el jem':     'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&q=80',
+  'sidi bou':   'https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=400&q=80',
+  'treasury':   'https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?w=400&q=80',
+  'currency':   'https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?w=400&q=80',
+  'bab':        'https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=400&q=80',
+  'kobba':      'https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?w=400&q=80',
+  'lake':       'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80',
+  'lac':        'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80',
+  'plage':      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80',
+  'hotel':      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80',
+  'restaurant': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
+  'cafe':       'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&q=80',
 }
 
 const TYPE_FALLBACKS = {
-  culture:   'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/2009-06-15_Sousse_Medina.jpg/400px-2009-06-15_Sousse_Medina.jpg',
-  beach:     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Hammamet_beach.jpg/400px-Hammamet_beach.jpg',
-  relax:     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Sidi_Bou_Said_1.jpg/400px-Sidi_Bou_Said_1.jpg',
-  adventure: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/ElDjemColosseum.jpg/400px-ElDjemColosseum.jpg',
-  default:   'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Tunis_medina_overview.jpg/400px-Tunis_medina_overview.jpg',
+  culture:   'https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=400&q=80',
+  beach:     'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80',
+  relax:     'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80',
+  adventure: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&q=80',
+  default:   'https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=400&q=80',
 }
 
-function getImageForPlace(name, type) {
+function getImage(name, type) {
   if (!name) return TYPE_FALLBACKS[type] || TYPE_FALLBACKS.default
-  const nameLower = name.toLowerCase()
-  for (const [key, url] of Object.entries(CITY_IMAGES)) {
-    if (nameLower.includes(key.toLowerCase())) return url
+  const lower = name.toLowerCase()
+  for (const [key, url] of Object.entries(PLACE_IMAGES)) {
+    if (lower.includes(key)) return url
   }
   return TYPE_FALLBACKS[type] || TYPE_FALLBACKS.default
 }
 
 export default function PlaceImage({ name, type, style = {} }) {
   const [error, setError] = useState(false)
-  const src = getImageForPlace(name, type)
+  const src = getImage(name, type)
   const fallback = TYPE_FALLBACKS[type] || TYPE_FALLBACKS.default
 
   return (
@@ -44,6 +63,7 @@ export default function PlaceImage({ name, type, style = {} }) {
       alt={name || 'lieu'}
       onError={() => setError(true)}
       style={{ objectFit: 'cover', ...style }}
+      loading="lazy"
     />
   )
 }
