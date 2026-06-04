@@ -5,6 +5,7 @@ import { generateTrip, getCities, getWeather, getReviews, postReview } from '../
 import { useAuth } from '../context/AuthContext'
 import { getRewardsPoints } from '../services/api.js'
 import TunisiaMap from '../components/TunisiaMap'
+import { useTheme } from '../context/ThemeContext'
 
 
 const CITIES_CONFIG = [
@@ -64,6 +65,7 @@ const RECOMMENDED = [
 export default function Home({ setTripData }) {
   const navigate = useNavigate()
   const { user, token } = useAuth()
+  const { theme, toggleTheme } = useTheme()
   const [lang, setLang] = useState('fr')
   const [bgIndex, setBgIndex] = useState(0)
   const [visible, setVisible] = useState(true)
@@ -184,6 +186,17 @@ export default function Home({ setTripData }) {
             ))}
           </div>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+
+        {/* Toggle dark/light */}
+  <button onClick={toggleTheme} style={{
+    background: 'rgba(255,255,255,0.15)',
+    border: '1px solid rgba(255,255,255,0.25)',
+    borderRadius: '20px', padding: '5px 12px',
+    color: 'white', fontSize: '14px', cursor: 'pointer'
+  }}>
+    {theme === 'light' ? '🌙' : '☀️'}
+  </button>
+
             <div style={{ display: 'flex', background: 'rgba(255,255,255,0.12)', borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.2)' }}>
               {['fr', 'en'].map(l => (
                 <div key={l} onClick={() => setLang(l)} style={{ color: lang === l ? 'white' : 'rgba(255,255,255,0.7)', fontSize: '12px', padding: '5px 12px', cursor: 'pointer', background: lang === l ? 'rgba(255,255,255,0.2)' : 'transparent', fontWeight: lang === l ? '500' : '400' }}>

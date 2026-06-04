@@ -14,31 +14,34 @@ import Destination from './pages/Destination'
 import Booking from './pages/Booking'
 import Search from './pages/Search'
 import Profile from './pages/Profile'
+import { ThemeProvider } from './context/ThemeContext'
 
 function App() {
   const [tripData, setTripData] = useState(null)
 
   return (
-    <AuthProvider>
-      <Router>
-        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
-          <Navbar />
-          <Routes>
-            <Route path="/"          element={<Home setTripData={setTripData} />} />
-            <Route path="/result"    element={<Result tripData={tripData} />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login"     element={<Login />} />
-            <Route path="/register"  element={<Register />} />
-            <Route path="/history"   element={<History />} />
-            <Route path="/rewards" element={<Rewards />} />
-            <Route path="/destination/:city" element={<Destination />} />
-            <Route path="/booking/:type/:name/:city/:price" element={<Booking />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/profile" element={<Profile />} />
-          </Routes>
-        </div>
-      </Router>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+            <Navbar />
+            <Routes>
+              <Route path="/"          element={<Home setTripData={setTripData} />} />
+              <Route path="/result"    element={<Result tripData={tripData} />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/login"     element={<Login />} />
+              <Route path="/register"  element={<Register />} />
+              <Route path="/history"   element={<History />} />
+              <Route path="/rewards"   element={<Rewards />} />
+              <Route path="/destination/:city" element={<Destination />} />
+              <Route path="/booking/:type/:name/:city/:price" element={<Booking />} />
+              <Route path="/search"    element={<Search />} />
+              <Route path="/profile"   element={<Profile />} />
+            </Routes>
+          </div>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 
