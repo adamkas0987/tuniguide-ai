@@ -1,7 +1,7 @@
 // src/pages/Home.jsx
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { generateTrip, getCities, getWeather, getReviews, postReview } from '../services/api.jsx'
+import { generateTrip, getCities, getWeather, getReviews, postReview } from '../services/api.js'
 import { useAuth } from '../context/AuthContext'
 
 const CITIES_CONFIG = [
