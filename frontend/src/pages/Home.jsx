@@ -16,7 +16,7 @@ const CITIES_CONFIG = [
 
 const TRANSLATIONS = {
   fr: {
-    nav: { home: 'Accueil', dashboard: 'Dashboard', rewards: 'Récompenses', trips: 'Mes voyages', login: 'Connexion', register: "S'inscrire" },
+    nav: { home: 'Accueil', search: 'Rechercher', dashboard: 'Dashboard', rewards: 'Récompenses', trips: 'Mes voyages', login: 'Connexion', register: "S'inscrire" },
     hero: { badge: 'Agent IA disponible 24h/24', title1: 'Explorez la', title2: "avec l'Intelligence Artificielle", subtitle: 'Itinéraires personnalisés • Météo en temps réel • Agent IA 24/7' },
     search: { plan: 'Planifier', hotels: 'Hôtels', activities: 'Activités', agent: 'Agent IA', dest: 'Destination', budget: 'Budget', duration: 'Durée', type: 'Type', generate: 'Générer', choose: 'Choisir une ville...', days: 'jours', types: { culture: '🏛️ Culture', beach: '🏖️ Plage', relax: '🌿 Relax', adventure: '🏕️ Aventure' } },
     rewards: { title: '🏆 TuniGuide Récompenses', desc: 'Gagnez des points à chaque voyage et commentaire. Échangez contre des réductions.', btn: 'Rejoindre le programme', points: 'points disponibles', level: 'Niveau Or ✨' },
@@ -28,14 +28,13 @@ const TRANSLATIONS = {
     hotels: { title: 'Hôtels recommandés', desc: 'Générez un voyage pour voir les hôtels disponibles', btn: 'Planifier un voyage' },
     activities: { title: 'Activités populaires', desc: 'Générez un voyage pour voir les activités disponibles', btn: 'Planifier un voyage' },
     agent: { title: 'Agent IA TuniGuide', desc: 'Posez vos questions sur votre voyage en Tunisie', btn: "Ouvrir l'Agent IA" },
-    social: { facebook: 'Facebook', instagram: 'Instagram', twitter: 'Twitter', github: 'GitHub' },
     aboutLinks: ["À propos de TuniGuide AI", "Notre équipe", "Carrières", "Conditions d'utilisation", "Confidentialité"],
     serviceLinks: ["API TuniGuide", "Programme partenaires", "Inscrire votre établissement", "Toutes les villes", "Devenir fournisseur"],
     contactLinks: ["🎧 Support client", "🛡️ Garantie service", "ℹ️ Centre d'aide", "📧 contact@tuniguide.ai"],
-    payment: 'Paiement', search: 'Rechercher'
+    payment: 'Paiement',
   },
   en: {
-    nav: { home: 'Home', dashboard: 'Dashboard', rewards: 'Rewards', trips: 'My trips', login: 'Login', register: 'Sign up' },
+    nav: { home: 'Home', search: 'Search', dashboard: 'Dashboard', rewards: 'Rewards', trips: 'My trips', login: 'Login', register: 'Sign up' },
     hero: { badge: 'AI Agent available 24/7', title1: 'Explore', title2: 'with Artificial Intelligence', subtitle: 'Personalized itineraries • Real-time weather • AI Agent 24/7' },
     search: { plan: 'Plan', hotels: 'Hotels', activities: 'Activities', agent: 'AI Agent', dest: 'Destination', budget: 'Budget', duration: 'Duration', type: 'Type', generate: 'Generate', choose: 'Choose a city...', days: 'days', types: { culture: '🏛️ Culture', beach: '🏖️ Beach', relax: '🌿 Relax', adventure: '🏕️ Adventure' } },
     rewards: { title: '🏆 TuniGuide Rewards', desc: 'Earn points with every trip and review. Redeem for exclusive discounts.', btn: 'Join the program', points: 'points available', level: 'Gold Level ✨' },
@@ -47,11 +46,10 @@ const TRANSLATIONS = {
     hotels: { title: 'Recommended hotels', desc: 'Generate a trip to see available hotels', btn: 'Plan a trip' },
     activities: { title: 'Popular activities', desc: 'Generate a trip to see available activities', btn: 'Plan a trip' },
     agent: { title: 'TuniGuide AI Agent', desc: 'Ask any question about your trip to Tunisia', btn: 'Open AI Agent' },
-    social: { facebook: 'Facebook', instagram: 'Instagram', twitter: 'Twitter', github: 'GitHub' },
     aboutLinks: ["About TuniGuide AI", "Our team", "Careers", "Terms of use", "Privacy"],
     serviceLinks: ["TuniGuide API", "Partner program", "List your property", "All cities", "Become a supplier"],
     contactLinks: ["🎧 Customer support", "🛡️ Service guarantee", "ℹ️ Help center", "📧 contact@tuniguide.ai"],
-    payment: 'Payment', search: 'Search'
+    payment: 'Payment',
   }
 }
 
