@@ -190,8 +190,10 @@ export default function Home({ setTripData }) {
               ))}
             </div>
             {user ? (
-              <span style={{ color: '#4ade80', fontSize: '13px', fontWeight: '500' }}>👤 {user.name}</span>
-            ) : (
+  <span onClick={() => navigate('/profile')} style={{ color: '#4ade80', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
+    👤 {user.name}
+  </span>
+) : (
               <>
                 <button onClick={() => navigate('/login')} style={btnStyle(false)}>{t.nav.login}</button>
                 <button onClick={() => navigate('/register')} style={btnStyle(true)}>{t.nav.register}</button>

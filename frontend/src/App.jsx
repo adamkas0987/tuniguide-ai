@@ -13,6 +13,7 @@ import Rewards from './pages/Rewards'
 import Destination from './pages/Destination'
 import Booking from './pages/Booking'
 import Search from './pages/Search'
+import Profile from './pages/Profile'
 
 function App() {
   const [tripData, setTripData] = useState(null)
@@ -33,6 +34,7 @@ function App() {
             <Route path="/destination/:city" element={<Destination />} />
             <Route path="/booking/:type/:name/:city/:price" element={<Booking />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>
       </Router>
