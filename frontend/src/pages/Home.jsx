@@ -1,12 +1,10 @@
 // src/pages/Home.jsx
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { generateTrip, getCities, getWeather, getReviews, postReview } from '../services/api.js'
+import { generateTrip, getCities, getWeather, getReviews, postReview, getRewardsPoints } from '../services/api.js'
 import { useAuth } from '../context/AuthContext'
-import { getRewardsPoints } from '../services/api.js'
 import TunisiaMap from '../components/TunisiaMap'
 import { useTheme } from '../context/ThemeContext'
-
 
 const CITIES_CONFIG = [
   { name: 'Tunis',    emoji: '🕌', bg: 'linear-gradient(160deg,#0a2342 0%,#1a4a7a 60%,#0f6e56 100%)', desc: 'Médinas, musées, patrimoine UNESCO' },
@@ -78,9 +76,9 @@ export default function Home({ setTripData }) {
   const [reviewForm, setReviewForm] = useState({ user_name: '', place: '', city: '', rating: 5, comment: '', photo_url: '' })
   const [photoPreview, setPhotoPreview] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+  const [rewardsData, setRewardsData] = useState({ points: 0, level: 'Débutant', level_en: 'Starter' })
   const fileRef = useRef()
   const t = TRANSLATIONS[lang]
-  const [rewardsData, setRewardsData] = useState({ points: 0, level: 'Débutant', level_en: 'Starter' })
 
   useEffect(() => {
     getCities().then(res => setCities(res.data)).catch(() => {})
@@ -102,13 +100,11 @@ export default function Home({ setTripData }) {
   useEffect(() => {
     if (formData.city) getWeather(formData.city).then(r => setWeather(r.data)).catch(() => setWeather(null))
   }, [formData.city])
-  
+
   useEffect(() => {
-  if (user && token) {
-    getRewardsPoints(token)
-      .then(res => setRewardsData(res.data))
-      .catch(() => {})
-  }
+    if (user && token) {
+      getRewardsPoints(token).then(res => setRewardsData(res.data)).catch(() => {})
+    }
   }, [user, token])
 
   const handleSubmit = async e => {
@@ -151,25 +147,18 @@ export default function Home({ setTripData }) {
 
   const bg = CITIES_CONFIG[bgIndex]
 
-  const btnStyle = (primary) => ({
-    background: primary ? '#1D9E75' : 'rgba(255,255,255,0.15)',
-    color: 'white',
-    border: primary ? 'none' : '1px solid rgba(255,255,255,0.25)',
-    borderRadius: '20px', padding: '7px 16px', fontSize: '12px', cursor: 'pointer'
-  })
-
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f0f4f8' }}>
 
       {/* ── HERO ────────────────────────────── */}
       <div style={{ background: bg.bg, transition: 'background 1s ease' }}>
 
-        {/* Navbar */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 24px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+        {/* Navbar responsive */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.1)', flexWrap: 'wrap', gap: '8px' }}>
           <div onClick={() => navigate('/')} style={{ color: 'white', fontSize: '20px', fontWeight: '500', cursor: 'pointer' }}>
             Tuni<span style={{ color: '#4ade80' }}>Guide</span> AI
           </div>
-          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '2px', alignItems: 'center', flexWrap: 'wrap' }}>
             {[
               { key: 'home', path: '/' },
               { key: 'search', path: '/search' },
@@ -177,7 +166,8 @@ export default function Home({ setTripData }) {
               { key: 'rewards', path: '/rewards' },
               ...(user ? [{ key: 'trips', path: '/history' }] : []),
             ].map(item => (
-              <span key={item.key} onClick={() => navigate(item.path)} style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', cursor: 'pointer', padding: '6px 10px', borderRadius: '6px' }}
+              <span key={item.key} onClick={() => navigate(item.path)}
+                style={{ color: 'rgba(255,255,255,0.85)', fontSize: '12px', cursor: 'pointer', padding: '5px 8px', borderRadius: '6px' }}
                 onMouseEnter={e => e.target.style.background = 'rgba(255,255,255,0.1)'}
                 onMouseLeave={e => e.target.style.background = 'transparent'}
               >
@@ -185,51 +175,47 @@ export default function Home({ setTripData }) {
               </span>
             ))}
           </div>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-
-        {/* Toggle dark/light */}
-  <button onClick={toggleTheme} style={{
-    background: 'rgba(255,255,255,0.15)',
-    border: '1px solid rgba(255,255,255,0.25)',
-    borderRadius: '20px', padding: '5px 12px',
-    color: 'white', fontSize: '14px', cursor: 'pointer'
-  }}>
-    {theme === 'light' ? '🌙' : '☀️'}
-  </button>
-
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <button onClick={toggleTheme} style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: '20px', padding: '5px 10px', color: 'white', fontSize: '14px', cursor: 'pointer' }}>
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
             <div style={{ display: 'flex', background: 'rgba(255,255,255,0.12)', borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.2)' }}>
               {['fr', 'en'].map(l => (
-                <div key={l} onClick={() => setLang(l)} style={{ color: lang === l ? 'white' : 'rgba(255,255,255,0.7)', fontSize: '12px', padding: '5px 12px', cursor: 'pointer', background: lang === l ? 'rgba(255,255,255,0.2)' : 'transparent', fontWeight: lang === l ? '500' : '400' }}>
+                <div key={l} onClick={() => setLang(l)} style={{ color: lang === l ? 'white' : 'rgba(255,255,255,0.7)', fontSize: '12px', padding: '5px 10px', cursor: 'pointer', background: lang === l ? 'rgba(255,255,255,0.2)' : 'transparent', fontWeight: lang === l ? '500' : '400' }}>
                   {l.toUpperCase()}
                 </div>
               ))}
             </div>
             {user ? (
-  <span onClick={() => navigate('/profile')} style={{ color: '#4ade80', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
-    👤 {user.name}
-  </span>
-) : (
+              <span onClick={() => navigate('/profile')} style={{ color: '#4ade80', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
+                👤 {user.name}
+              </span>
+            ) : (
               <>
-                <button onClick={() => navigate('/login')} style={btnStyle(false)}>{t.nav.login}</button>
-                <button onClick={() => navigate('/register')} style={btnStyle(true)}>{t.nav.register}</button>
+                <button onClick={() => navigate('/login')} style={{ background: 'rgba(255,255,255,0.15)', color: 'white', border: '1px solid rgba(255,255,255,0.25)', borderRadius: '20px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer' }}>
+                  {t.nav.login}
+                </button>
+                <button onClick={() => navigate('/register')} style={{ background: '#1D9E75', border: 'none', color: 'white', borderRadius: '20px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer' }}>
+                  {t.nav.register}
+                </button>
               </>
             )}
           </div>
         </div>
 
         {/* Hero content */}
-        <div style={{ textAlign: 'center', padding: '40px 24px 0' }}>
+        <div style={{ textAlign: 'center', padding: '40px 16px 0' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '20px', padding: '6px 14px', color: 'rgba(255,255,255,0.9)', fontSize: '12px', marginBottom: '16px' }}>
             ✨ {t.hero.badge} •
             <span style={{ color: '#4ade80', fontWeight: '500', opacity: visible ? 1 : 0, transition: 'opacity 0.5s' }}>
               {bg.emoji} {bg.name}
             </span>
           </div>
-          <h1 style={{ fontSize: '38px', fontWeight: '500', color: 'white', margin: '0 0 10px', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
+          <h1 style={{ fontSize: 'clamp(24px, 5vw, 38px)', fontWeight: '500', color: 'white', margin: '0 0 10px', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
             {t.hero.title1} <span style={{ color: '#4ade80' }}>Tunisie</span><br />{t.hero.title2}
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '14px', marginBottom: '28px' }}>{t.hero.subtitle}</p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', marginBottom: '32px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(16px, 4vw, 40px)', marginBottom: '32px', flexWrap: 'wrap' }}>
             {[['6', lang === 'fr' ? 'Villes' : 'Cities'], ['96+', lang === 'fr' ? 'Lieux' : 'Places'], ['24/7', 'Agent IA'], ['100%', lang === 'fr' ? 'Gratuit' : 'Free']].map(([v, l]) => (
               <div key={l} style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '24px', fontWeight: '500', color: '#4ade80' }}>{v}</div>
@@ -240,10 +226,10 @@ export default function Home({ setTripData }) {
         </div>
 
         {/* Search card */}
-        <div style={{ background: 'white', borderRadius: '16px 16px 0 0', padding: '20px 24px', margin: '0 16px' }}>
-          <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', marginBottom: '16px' }}>
+        <div style={{ background: 'white', borderRadius: '16px 16px 0 0', padding: '20px 16px', margin: '0 8px' }}>
+          <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', marginBottom: '16px', overflowX: 'auto' }}>
             {[['plan', '🗺️', t.search.plan], ['hotels', '🏨', t.search.hotels], ['activities', '🎯', t.search.activities], ['agent', '🤖', t.search.agent]].map(([key, icon, label]) => (
-              <div key={key} onClick={() => setActiveTab(key)} style={{ padding: '8px 14px', fontSize: '12px', cursor: 'pointer', borderBottom: `2px solid ${activeTab === key ? '#1D9E75' : 'transparent'}`, color: activeTab === key ? '#1D9E75' : '#6b7280', fontWeight: activeTab === key ? '500' : '400', marginBottom: '-1px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div key={key} onClick={() => setActiveTab(key)} style={{ padding: '8px 12px', fontSize: '12px', cursor: 'pointer', borderBottom: `2px solid ${activeTab === key ? '#1D9E75' : 'transparent'}`, color: activeTab === key ? '#1D9E75' : '#6b7280', fontWeight: activeTab === key ? '500' : '400', marginBottom: '-1px', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}>
                 {icon} {label}
               </div>
             ))}
@@ -251,8 +237,8 @@ export default function Home({ setTripData }) {
 
           {activeTab === 'plan' && (
             <form onSubmit={handleSubmit}>
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr auto', gap: '8px', alignItems: 'end' }}>
-                <div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px', alignItems: 'end' }}>
+                <div style={{ gridColumn: 'span 2' }}>
                   <div style={{ fontSize: '10px', color: '#6b7280', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>{t.search.dest}</div>
                   <select name="city" value={formData.city} onChange={e => setFormData({ ...formData, city: e.target.value })} required style={{ width: '100%', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '9px 11px', fontSize: '13px', backgroundColor: '#fafafa', outline: 'none' }}>
                     <option value="">{t.search.choose}</option>
@@ -282,7 +268,7 @@ export default function Home({ setTripData }) {
                     {Object.entries(t.search.types).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                   </select>
                 </div>
-                <button type="submit" disabled={loading || !formData.city} style={{ background: loading || !formData.city ? '#d1d5db' : '#1D9E75', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 20px', fontSize: '13px', fontWeight: '500', cursor: loading || !formData.city ? 'not-allowed' : 'pointer', height: '40px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
+                <button type="submit" disabled={loading || !formData.city} style={{ background: loading || !formData.city ? '#d1d5db' : '#1D9E75', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 16px', fontSize: '13px', fontWeight: '500', cursor: loading || !formData.city ? 'not-allowed' : 'pointer', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
                   🔍 {loading ? '...' : t.search.generate}
                 </button>
               </div>
@@ -325,65 +311,65 @@ export default function Home({ setTripData }) {
       </div>
 
       {/* ── REWARDS ─────────────────────────── */}
-<div style={{ padding: '16px 24px', background: '#f9fafb' }}>
-  <div style={{ background: 'linear-gradient(135deg,#1D9E75,#0f6e56)', borderRadius: '14px', padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-    <div>
-      <div style={{ color: 'white', fontSize: '15px', fontWeight: '500', marginBottom: '4px' }}>{t.rewards.title}</div>
-      <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px', marginBottom: '12px' }}>{t.rewards.desc}</div>
-      <button onClick={() => navigate(user ? '/rewards' : '/register')} style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', borderRadius: '20px', padding: '7px 16px', fontSize: '12px', cursor: 'pointer' }}>
-        {t.rewards.btn}
-      </button>
-    </div>
-    <div style={{ textAlign: 'right' }}>
-      <div style={{ fontSize: '28px', fontWeight: '500', color: '#4ade80' }}>
-        {user ? rewardsData.points : '—'}
-      </div>
-      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)' }}>
-        {user ? t.rewards.points : (lang === 'fr' ? 'Connectez-vous pour voir vos points' : 'Login to see your points')}
-      </div>
-      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', marginTop: '4px' }}>
-        {user ? (lang === 'fr' ? `Niveau ${rewardsData.level}` : `${rewardsData.level_en} Level`) : ''}
-      </div>
-    </div>
-  </div>
-</div>
-
-      {/* ── CARTE INTERACTIVE ───────────────── */}
-<div style={{ padding: '16px 24px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
-  <TunisiaMap lang={lang} />
-</div>
-
-      {/* ── DESTINATIONS ────────────────────── */}
-<div style={{ padding: '16px 24px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
-  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-    <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937' }}>{t.destinations.title}</div>
-    <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ fontSize: '12px', color: '#1D9E75', cursor: 'pointer' }}>{t.destinations.seeAll} ›</div>
-  </div>
-  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '8px' }}>
-    {CITIES_CONFIG.map(city => (
-      <div key={city.name} onClick={() => navigate(`/destination/${city.name}`)} style={{ borderRadius: '10px', overflow: 'hidden', cursor: 'pointer', height: '110px', background: city.bg, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '8px', position: 'relative', border: '2px solid transparent', transition: 'all 0.2s' }}
-        onMouseEnter={e => e.currentTarget.style.border = '2px solid #4ade80'}
-        onMouseLeave={e => e.currentTarget.style.border = '2px solid transparent'}
-      >
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)' }} />
-        <div style={{ position: 'relative', zIndex: 2 }}>
-          <div style={{ color: 'white', fontSize: '12px', fontWeight: '500' }}>{city.emoji} {city.name}</div>
-          <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: '10px' }}>{cities.includes(city.name) ? `20 ${t.destinations.places}` : ''}</div>
+      <div style={{ padding: '16px', background: '#f9fafb' }}>
+        <div style={{ background: 'linear-gradient(135deg,#1D9E75,#0f6e56)', borderRadius: '14px', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <div style={{ color: 'white', fontSize: '15px', fontWeight: '500', marginBottom: '4px' }}>{t.rewards.title}</div>
+            <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px', marginBottom: '12px' }}>{t.rewards.desc}</div>
+            <button onClick={() => navigate(user ? '/rewards' : '/register')} style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', borderRadius: '20px', padding: '7px 16px', fontSize: '12px', cursor: 'pointer' }}>
+              {t.rewards.btn}
+            </button>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: '28px', fontWeight: '500', color: '#4ade80' }}>{user ? rewardsData.points : '—'}</div>
+            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)' }}>
+              {user ? t.rewards.points : (lang === 'fr' ? 'Connectez-vous pour voir vos points' : 'Login to see your points')}
+            </div>
+            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', marginTop: '4px' }}>
+              {user ? (lang === 'fr' ? `Niveau ${rewardsData.level}` : `${rewardsData.level_en} Level`) : ''}
+            </div>
+          </div>
         </div>
       </div>
-    ))}
-  </div>
-</div>
+
+      {/* ── CARTE INTERACTIVE ───────────────── */}
+      <div style={{ padding: '16px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
+        <TunisiaMap lang={lang} />
+      </div>
+
+      {/* ── DESTINATIONS ────────────────────── */}
+      <div style={{ padding: '16px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+          <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937' }}>{t.destinations.title}</div>
+          <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ fontSize: '12px', color: '#1D9E75', cursor: 'pointer' }}>{t.destinations.seeAll} ›</div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '8px' }}>
+          {CITIES_CONFIG.map(city => (
+            <div key={city.name} onClick={() => navigate(`/destination/${city.name}`)}
+              style={{ borderRadius: '10px', overflow: 'hidden', cursor: 'pointer', height: '110px', background: city.bg, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '8px', position: 'relative', border: '2px solid transparent', transition: 'all 0.2s' }}
+              onMouseEnter={e => e.currentTarget.style.border = '2px solid #4ade80'}
+              onMouseLeave={e => e.currentTarget.style.border = '2px solid transparent'}
+            >
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)' }} />
+              <div style={{ position: 'relative', zIndex: 2 }}>
+                <div style={{ color: 'white', fontSize: '12px', fontWeight: '500' }}>{city.emoji} {city.name}</div>
+                <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: '10px' }}>{cities.includes(city.name) ? `20 ${t.destinations.places}` : ''}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* ── ITINERAIRES ─────────────────────── */}
-      <div style={{ padding: '16px 24px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
+      <div style={{ padding: '16px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
           <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937' }}>{t.itineraries.title}</div>
           <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ fontSize: '12px', color: '#1D9E75', cursor: 'pointer' }}>{t.itineraries.seeAll} ›</div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
           {RECOMMENDED.map((item, i) => (
-            <div key={i} onClick={() => handleRecommendedClick(item)} style={{ border: '0.5px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
+            <div key={i} onClick={() => handleRecommendedClick(item)}
+              style={{ border: '0.5px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
               onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
               onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
             >
@@ -402,14 +388,11 @@ export default function Home({ setTripData }) {
       </div>
 
       {/* ── AVIS ────────────────────────────── */}
-      <div style={{ padding: '16px 24px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-          <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937' }}>{t.reviews.title}</div>
-        </div>
-
+      <div style={{ padding: '16px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
+        <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937', marginBottom: '14px' }}>{t.reviews.title}</div>
         <div style={{ border: '0.5px solid #e5e7eb', borderRadius: '12px', padding: '16px', marginBottom: '16px', background: '#f9fafb' }}>
           <div style={{ fontSize: '13px', fontWeight: '500', color: '#1f2937', marginBottom: '12px' }}>💬 {t.reviews.share}</div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px', marginBottom: '8px' }}>
             <input placeholder={t.reviews.place} value={reviewForm.place} onChange={e => setReviewForm(f => ({ ...f, place: e.target.value }))} style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '8px 12px', fontSize: '13px', outline: 'none' }} />
             <select value={reviewForm.city} onChange={e => setReviewForm(f => ({ ...f, city: e.target.value }))} style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '8px 12px', fontSize: '13px', outline: 'none' }}>
               <option value="">🏙️ {lang === 'fr' ? 'Ville...' : 'City...'}</option>
@@ -422,8 +405,8 @@ export default function Home({ setTripData }) {
             ))}
           </div>
           <textarea placeholder={t.reviews.comment} value={reviewForm.comment} onChange={e => setReviewForm(f => ({ ...f, comment: e.target.value }))} style={{ width: '100%', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '8px 12px', fontSize: '13px', outline: 'none', resize: 'vertical', minHeight: '70px', marginBottom: '8px', boxSizing: 'border-box' }} />
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <div onClick={() => fileRef.current.click()} style={{ flex: 1, border: '1.5px dashed #d1d5db', borderRadius: '8px', padding: '10px', textAlign: 'center', cursor: 'pointer', background: 'white' }}>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div onClick={() => fileRef.current.click()} style={{ flex: 1, minWidth: '120px', border: '1.5px dashed #d1d5db', borderRadius: '8px', padding: '10px', textAlign: 'center', cursor: 'pointer', background: 'white' }}>
               {photoPreview ? (
                 <img src={photoPreview} alt="preview" style={{ height: '50px', borderRadius: '6px', objectFit: 'cover' }} />
               ) : (
@@ -436,11 +419,10 @@ export default function Home({ setTripData }) {
             </button>
           </div>
         </div>
-
         {reviews.length === 0 ? (
           <div style={{ textAlign: 'center', color: '#6b7280', fontSize: '13px', padding: '20px' }}>{t.reviews.noReviews}</div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '10px' }}>
             {reviews.slice(0, 4).map((r, i) => (
               <div key={r._id || i} style={{ border: '0.5px solid #e5e7eb', borderRadius: '10px', padding: '14px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
@@ -462,9 +444,9 @@ export default function Home({ setTripData }) {
       </div>
 
       {/* ── FEATURES ────────────────────────── */}
-      <div style={{ padding: '16px 24px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
+      <div style={{ padding: '16px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
         <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937', marginBottom: '14px' }}>{t.features.title}</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
           {[
             { icon: '🤖', title: 'Agent IA 24/7', desc: lang === 'fr' ? "Assistance en cas d'imprévus" : 'Assistance for unexpected situations', action: () => navigate('/result') },
             { icon: '🌤️', title: lang === 'fr' ? 'Météo live' : 'Live weather', desc: lang === 'fr' ? 'Conseils adaptés aux conditions' : 'Advice adapted to conditions', action: () => setActiveTab('plan') },
@@ -484,8 +466,8 @@ export default function Home({ setTripData }) {
       </div>
 
       {/* ── FOOTER ──────────────────────────── */}
-      <div style={{ background: '#0a1628', padding: '28px 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '20px' }}>
+      <div style={{ background: '#0a1628', padding: '24px 16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '20px', marginBottom: '20px' }}>
           <div>
             <div onClick={() => navigate('/')} style={{ color: 'white', fontSize: '16px', fontWeight: '500', marginBottom: '8px', cursor: 'pointer' }}>
               Tuni<span style={{ color: '#4ade80' }}>Guide</span> AI
@@ -493,7 +475,7 @@ export default function Home({ setTripData }) {
             <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', lineHeight: '1.6', marginBottom: '12px' }}>
               {lang === 'fr' ? 'Votre assistant intelligent pour explorer la Tunisie.' : 'Your intelligent assistant to explore Tunisia.'}
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               {[
                 { icon: '📘', url: 'https://facebook.com' },
                 { icon: '📸', url: 'https://instagram.com' },
@@ -509,47 +491,36 @@ export default function Home({ setTripData }) {
               ))}
             </div>
           </div>
-
           <div>
             <div style={{ color: 'white', fontSize: '13px', fontWeight: '500', marginBottom: '12px' }}>{t.footer.about}</div>
             {t.aboutLinks.map((link, i) => (
               <div key={i} onClick={() => navigate('/')} style={{ color: 'rgba(255,255,255,0.55)', fontSize: '12px', marginBottom: '7px', cursor: 'pointer' }}
                 onMouseEnter={e => e.target.style.color = '#4ade80'}
                 onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.55)'}
-              >
-                {link}
-              </div>
+              >{link}</div>
             ))}
           </div>
-
           <div>
             <div style={{ color: 'white', fontSize: '13px', fontWeight: '500', marginBottom: '12px' }}>{t.footer.services}</div>
             {t.serviceLinks.map((link, i) => (
               <div key={i} onClick={() => i === 3 ? navigate('/dashboard') : navigate('/')} style={{ color: 'rgba(255,255,255,0.55)', fontSize: '12px', marginBottom: '7px', cursor: 'pointer' }}
                 onMouseEnter={e => e.target.style.color = '#4ade80'}
                 onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.55)'}
-              >
-                {link}
-              </div>
+              >{link}</div>
             ))}
           </div>
-
           <div>
             <div style={{ color: 'white', fontSize: '13px', fontWeight: '500', marginBottom: '12px' }}>{t.footer.contact}</div>
             {t.contactLinks.map((link, i) => (
-              <div key={i} onClick={() => {
-                if (i === 3) window.open('mailto:contact@tuniguide.ai')
-                else navigate('/')
-              }} style={{ color: 'rgba(255,255,255,0.55)', fontSize: '12px', marginBottom: '7px', cursor: 'pointer' }}
+              <div key={i} onClick={() => { if (i === 3) window.open('mailto:contact@tuniguide.ai'); else navigate('/') }}
+                style={{ color: 'rgba(255,255,255,0.55)', fontSize: '12px', marginBottom: '7px', cursor: 'pointer' }}
                 onMouseEnter={e => e.target.style.color = '#4ade80'}
                 onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.55)'}
-              >
-                {link}
-              </div>
+              >{link}</div>
             ))}
             <div style={{ marginTop: '12px' }}>
               <div style={{ color: 'white', fontSize: '11px', fontWeight: '500', marginBottom: '6px' }}>{t.payment}</div>
-              <div style={{ display: 'flex', gap: '6px' }}>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                 {['Visa', 'Mastercard', 'PayPal'].map(p => (
                   <div key={p} style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '4px', padding: '3px 8px', fontSize: '10px', color: 'rgba(255,255,255,0.7)' }}>{p}</div>
                 ))}
@@ -557,8 +528,7 @@ export default function Home({ setTripData }) {
             </div>
           </div>
         </div>
-
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
           <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px' }}>{t.footer.rights}</div>
           <div style={{ display: 'flex', gap: '16px' }}>
             {['Cookies', 'Sitemap'].map(l => (
