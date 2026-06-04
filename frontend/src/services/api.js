@@ -57,3 +57,7 @@ export const getBookings = () => API.get('/bookings')
 
 // Image d'un lieu
 export const getPlaceImage = (placeName) => API.get(`/image/${encodeURIComponent(placeName)}`)
+
+// Notation
+export const addRating = (data) => API.post('/ratings', data)
+export const getRatings = (placeName) => API.get(`/ratings/${encodeURIComponent(placeName)}`)
