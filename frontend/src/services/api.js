@@ -41,3 +41,16 @@ export const getReviews = (city) => API.get(`/reviews${city ? `?city=${city}` : 
 
 // Avis — poster
 export const postReview = (data) => API.post('/reviews', data)
+
+// Récompenses
+export const getRewardsPoints = (token) => axios.get(
+  'https://tuniguide-backend.onrender.com/rewards/points',
+  { headers: { Authorization: `Bearer ${token}` } }
+)
+
+// Destination complète
+export const getDestination = (city) => API.get(`/destination/${city}`)
+
+// Réservations
+export const createBooking = (data) => API.post('/bookings', data)
+export const getBookings = () => API.get('/bookings')

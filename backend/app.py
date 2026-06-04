@@ -210,5 +210,115 @@ def post_review():
     review['_id'] = str(result.inserted_id)
     return jsonify({"message": "Avis publié", "review": review}), 201
 
+# ──────────────────────────────────────────────
+# Récompenses — Récupérer les points
+# ──────────────────────────────────────────────
+@app.route('/rewards/points', methods=['GET'])
+@jwt_required()
+def get_points():
+    from flask_jwt_extended import get_jwt_identity
+    import bson
+    user_id = get_jwt_identity()
+    
+    # Compter les voyages
+    trips_count = db["trips"].count_documents({"user_id": user_id})
+    # Compter les avis
+    reviews_count = db["reviews"].count_documents({"user_id": user_id})
+    
+    # Calcul des points
+    points = (trips_count * 100) + (reviews_count * 50)
+    
+    # Niveau
+    if points >= 1000:
+        level = "Or"
+        level_en = "Gold"
+        next_level = None
+        next_points = None
+    elif points >= 500:
+        level = "Argent"
+        level_en = "Silver"
+        next_level = "Or"
+        next_points = 1000 - points
+    elif points >= 200:
+        level = "Bronze"
+        level_en = "Bronze"
+        next_level = "Argent"
+        next_points = 500 - points
+    else:
+        level = "Débutant"
+        level_en = "Starter"
+        next_level = "Bronze"
+        next_points = 200 - points
+    
+    return jsonify({
+        "points": points,
+        "level": level,
+        "level_en": level_en,
+        "trips_count": trips_count,
+        "reviews_count": reviews_count,
+        "next_level": next_level,
+        "next_points": next_points
+    })
+
+# ──────────────────────────────────────────────
+# Destination — Infos complètes d'une ville
+# ──────────────────────────────────────────────
+@app.route('/destination/<city>', methods=['GET'])
+def get_destination(city):
+    places = list(places_collection.find({"city": city}).limit(6))
+    restaurants = list(restaurants_collection.find({"city": city}).limit(4))
+    hotels = list(hotels_collection.find({"city": city}).limit(4))
+    weather = get_weather(city)
+    
+    for p in places:
+        p['_id'] = str(p['_id'])
+    for r in restaurants:
+        r['_id'] = str(r['_id'])
+    for h in hotels:
+        h['_id'] = str(h['_id'])
+    
+    return jsonify({
+        "city": city,
+        "places": places,
+        "restaurants": restaurants,
+        "hotels": hotels,
+        "weather": weather
+    })
+
+# ──────────────────────────────────────────────
+# Réservation — Sauvegarder une réservation
+# ──────────────────────────────────────────────
+@app.route('/bookings', methods=['POST'])
+def create_booking():
+    data = request.json
+    if not data:
+        return jsonify({"error": "Données manquantes"}), 400
+    
+    booking = {
+        "type":       data.get('type'),
+        "name":       data.get('name'),
+        "city":       data.get('city'),
+        "user_name":  data.get('user_name', 'Anonyme'),
+        "user_email": data.get('user_email', ''),
+        "check_in":   data.get('check_in', ''),
+        "check_out":  data.get('check_out', ''),
+        "guests":     data.get('guests', 1),
+        "date":       data.get('date', ''),
+        "price":      data.get('price', 0),
+        "created_at": datetime.now().isoformat(),
+        "status":     "confirmed"
+    }
+    
+    result = db["bookings"].insert_one(booking)
+    booking['_id'] = str(result.inserted_id)
+    return jsonify({"message": "Réservation confirmée !", "booking": booking}), 201
+
+@app.route('/bookings', methods=['GET'])
+def get_bookings():
+    bookings = list(db["bookings"].find().sort("created_at", -1).limit(10))
+    for b in bookings:
+        b['_id'] = str(b['_id'])
+    return jsonify(bookings)
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

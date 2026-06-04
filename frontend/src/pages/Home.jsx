@@ -161,7 +161,7 @@ export default function Home({ setTripData }) {
             {[
               { key: 'home', path: '/' },
               { key: 'dashboard', path: '/dashboard' },
-              { key: 'rewards', path: '/register' },
+              { key: 'rewards', path: '/rewards' },
               ...(user ? [{ key: 'trips', path: '/history' }] : []),
             ].map(item => (
               <span key={item.key} onClick={() => navigate(item.path)} style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', cursor: 'pointer', padding: '6px 10px', borderRadius: '6px' }}

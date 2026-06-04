@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import History from './pages/History'
+import Rewards from './pages/Rewards'
 
 function App() {
   const [tripData, setTripData] = useState(null)
@@ -25,6 +26,7 @@ function App() {
             <Route path="/login"     element={<Login />} />
             <Route path="/register"  element={<Register />} />
             <Route path="/history"   element={<History />} />
+            <Route path="/rewards" element={<Rewards />} />
           </Routes>
         </div>
       </Router>
