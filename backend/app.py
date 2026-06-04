@@ -3,10 +3,12 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import jwt_required
 from recommendation import generate_trip, find_alternative
-from database import places_collection, restaurants_collection, hotels_collection
+from database import places_collection, restaurants_collection, hotels_collection, db
 from weather import get_weather, get_weather_advice
 from agent import chat_with_agent
 from auth import init_jwt, register_user, login_user, save_trip, get_user_trips, get_profile
+from datetime import datetime
+import base64
 
 app = Flask(__name__)
 CORS(app)
@@ -172,6 +174,41 @@ def save_trip_route():
 @jwt_required()
 def trips_history():
     return get_user_trips()
+
+# ──────────────────────────────────────────────
+# Avis — Récupérer les avis par ville
+# ──────────────────────────────────────────────
+@app.route('/reviews', methods=['GET'])
+def get_reviews():
+    city = request.args.get('city')
+    query = {"city": city} if city else {}
+    reviews = list(db["reviews"].find(query).sort("created_at", -1).limit(20))
+    for r in reviews:
+        r['_id'] = str(r['_id'])
+    return jsonify(reviews)
+
+# ──────────────────────────────────────────────
+# Avis — Poster un avis
+# ──────────────────────────────────────────────
+@app.route('/reviews', methods=['POST'])
+def post_review():
+    data = request.json
+    if not data:
+        return jsonify({"error": "Données manquantes"}), 400
+
+    review = {
+        "user_name":  data.get('user_name', 'Anonyme'),
+        "place":      data.get('place', ''),
+        "city":       data.get('city', ''),
+        "rating":     int(data.get('rating', 5)),
+        "comment":    data.get('comment', ''),
+        "photo_url":  data.get('photo_url', ''),
+        "created_at": datetime.now().isoformat()
+    }
+
+    result = db["reviews"].insert_one(review)
+    review['_id'] = str(result.inserted_id)
+    return jsonify({"message": "Avis publié", "review": review}), 201
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

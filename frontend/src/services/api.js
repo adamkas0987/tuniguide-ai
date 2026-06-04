@@ -12,6 +12,15 @@ export const generateTrip = (data) => API.post('/generate-trip', data)
 // Liste des villes
 export const getCities = () => API.get('/cities')
 
+// Lieux par ville
+export const getPlaces = (city) => API.get(`/places${city ? `?city=${city}` : ''}`)
+
+// Restaurants par ville
+export const getRestaurants = (city) => API.get(`/restaurants${city ? `?city=${city}` : ''}`)
+
+// Hotels par ville
+export const getHotels = (city) => API.get(`/hotels${city ? `?city=${city}` : ''}`)
+
 // Météo d'une ville
 export const getWeather = (city) => API.get(`/weather/${city}`)
 
@@ -26,3 +35,9 @@ export const chatWithAgent = (message, history, tripContext) =>
 // Alternative si lieu fermé
 export const getAlternative = (city, type, exclude, lat, lng) =>
   API.post('/alternative', { city, type, exclude, lat, lng })
+
+// Avis — récupérer
+export const getReviews = (city) => API.get(`/reviews${city ? `?city=${city}` : ''}`)
+
+// Avis — poster
+export const postReview = (data) => API.post('/reviews', data)
