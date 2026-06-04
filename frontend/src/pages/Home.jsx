@@ -63,7 +63,7 @@ const RECOMMENDED = [
 
 export default function Home({ setTripData }) {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, token } = useAuth()
   const [lang, setLang] = useState('fr')
   const [bgIndex, setBgIndex] = useState(0)
   const [visible, setVisible] = useState(true)
