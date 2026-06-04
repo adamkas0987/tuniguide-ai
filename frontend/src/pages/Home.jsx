@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { generateTrip, getCities, getWeather, getReviews, postReview } from '../services/api.js'
 import { useAuth } from '../context/AuthContext'
+import { getRewardsPoints } from '../services/api.js'
 
 const CITIES_CONFIG = [
   { name: 'Tunis',    emoji: '🕌', bg: 'linear-gradient(160deg,#0a2342 0%,#1a4a7a 60%,#0f6e56 100%)', desc: 'Médinas, musées, patrimoine UNESCO' },
@@ -77,6 +78,7 @@ export default function Home({ setTripData }) {
   const [submitting, setSubmitting] = useState(false)
   const fileRef = useRef()
   const t = TRANSLATIONS[lang]
+  const [rewardsData, setRewardsData] = useState({ points: 0, level: 'Débutant', level_en: 'Starter' })
 
   useEffect(() => {
     getCities().then(res => setCities(res.data)).catch(() => {})
@@ -98,6 +100,14 @@ export default function Home({ setTripData }) {
   useEffect(() => {
     if (formData.city) getWeather(formData.city).then(r => setWeather(r.data)).catch(() => setWeather(null))
   }, [formData.city])
+  
+  useEffect(() => {
+  if (user && token) {
+    getRewardsPoints(token)
+      .then(res => setRewardsData(res.data))
+      .catch(() => {})
+  }
+  }, [user, token])
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -299,22 +309,28 @@ export default function Home({ setTripData }) {
       </div>
 
       {/* ── REWARDS ─────────────────────────── */}
-      <div style={{ padding: '16px 24px', background: '#f9fafb' }}>
-        <div style={{ background: 'linear-gradient(135deg,#1D9E75,#0f6e56)', borderRadius: '14px', padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ color: 'white', fontSize: '15px', fontWeight: '500', marginBottom: '4px' }}>{t.rewards.title}</div>
-            <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px', marginBottom: '12px' }}>{t.rewards.desc}</div>
-            <button onClick={() => navigate(user ? '/history' : '/register')} style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', borderRadius: '20px', padding: '7px 16px', fontSize: '12px', cursor: 'pointer' }}>
-              {t.rewards.btn}
-            </button>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '28px', fontWeight: '500', color: '#4ade80' }}>1,250</div>
-            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)' }}>{t.rewards.points}</div>
-            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', marginTop: '4px' }}>{t.rewards.level}</div>
-          </div>
-        </div>
+<div style={{ padding: '16px 24px', background: '#f9fafb' }}>
+  <div style={{ background: 'linear-gradient(135deg,#1D9E75,#0f6e56)', borderRadius: '14px', padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div>
+      <div style={{ color: 'white', fontSize: '15px', fontWeight: '500', marginBottom: '4px' }}>{t.rewards.title}</div>
+      <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px', marginBottom: '12px' }}>{t.rewards.desc}</div>
+      <button onClick={() => navigate(user ? '/rewards' : '/register')} style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', borderRadius: '20px', padding: '7px 16px', fontSize: '12px', cursor: 'pointer' }}>
+        {t.rewards.btn}
+      </button>
+    </div>
+    <div style={{ textAlign: 'right' }}>
+      <div style={{ fontSize: '28px', fontWeight: '500', color: '#4ade80' }}>
+        {user ? rewardsData.points : '—'}
       </div>
+      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)' }}>
+        {user ? t.rewards.points : (lang === 'fr' ? 'Connectez-vous pour voir vos points' : 'Login to see your points')}
+      </div>
+      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', marginTop: '4px' }}>
+        {user ? (lang === 'fr' ? `Niveau ${rewardsData.level}` : `${rewardsData.level_en} Level`) : ''}
+      </div>
+    </div>
+  </div>
+</div>
 
       {/* ── DESTINATIONS ────────────────────── */}
 <div style={{ padding: '16px 24px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
