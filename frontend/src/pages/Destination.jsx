@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getDestination } from '../services/api.js'
+import PlaceImage from '../components/PlaceImage'
 
 export default function Destination() {
   const { city } = useParams()
@@ -88,29 +89,36 @@ export default function Destination() {
           ))}
         </div>
 
-        {/* Lieux */}
-        {activeTab === 'places' && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
-            {(data.places || []).map((place, i) => (
-              <div key={i} style={{ background: 'white', borderRadius: '14px', padding: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', border: '0.5px solid #e5e7eb' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                  <h3 style={{ fontSize: '14px', fontWeight: '600', color: '#1f2937', margin: 0, flex: 1, paddingRight: '8px' }}>{place.name}</h3>
-                  <span style={{ background: '#f0fdf4', color: '#1D9E75', fontSize: '11px', padding: '3px 8px', borderRadius: '20px', whiteSpace: 'nowrap', fontWeight: '500' }}>
-                    {place.cost === 0 ? '✨ Gratuit' : `${place.price} DT`}
-                  </span>
-                </div>
-                <p style={{ fontSize: '12px', color: '#6b7280', lineHeight: '1.5', marginBottom: '10px' }}>
-                  {(place.description || '').slice(0, 120)}
-                </p>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  <span style={{ background: '#f3f4f6', color: '#374151', fontSize: '11px', padding: '3px 8px', borderRadius: '20px' }}>🎯 {place.type}</span>
-                  <span style={{ background: '#f3f4f6', color: '#374151', fontSize: '11px', padding: '3px 8px', borderRadius: '20px' }}>⭐ {place.rating}/5</span>
-                  <span style={{ background: '#f3f4f6', color: '#374151', fontSize: '11px', padding: '3px 8px', borderRadius: '20px' }}>⏱️ {place.duration}h</span>
-                </div>
-              </div>
-            ))}
+       {/* Lieux */}
+{activeTab === 'places' && (
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+    {(data.places || []).map((place, i) => (
+      <div key={i} style={{ background: 'white', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', border: '0.5px solid #e5e7eb' }}>
+        <PlaceImage
+          name={place.name}
+          type={place.type}
+          style={{ width: '100%', height: '140px' }}
+        />
+        <div style={{ padding: '14px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+            <h3 style={{ fontSize: '14px', fontWeight: '600', color: '#1f2937', margin: 0, flex: 1, paddingRight: '8px' }}>{place.name}</h3>
+            <span style={{ background: '#f0fdf4', color: '#1D9E75', fontSize: '11px', padding: '3px 8px', borderRadius: '20px', whiteSpace: 'nowrap', fontWeight: '500' }}>
+              {place.price === 0 ? '✨ Gratuit' : `${place.price} DT`}
+            </span>
           </div>
-        )}
+          <p style={{ fontSize: '12px', color: '#6b7280', lineHeight: '1.5', marginBottom: '10px' }}>
+            {(place.description || '').slice(0, 100)}
+          </p>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{ background: '#f3f4f6', color: '#374151', fontSize: '11px', padding: '3px 8px', borderRadius: '20px' }}>🎯 {place.type}</span>
+            <span style={{ background: '#f3f4f6', color: '#374151', fontSize: '11px', padding: '3px 8px', borderRadius: '20px' }}>⭐ {place.rating}/5</span>
+            <span style={{ background: '#f3f4f6', color: '#374151', fontSize: '11px', padding: '3px 8px', borderRadius: '20px' }}>⏱️ {place.duration}h</span>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
 
         {/* Restaurants */}
         {activeTab === 'restaurants' && (

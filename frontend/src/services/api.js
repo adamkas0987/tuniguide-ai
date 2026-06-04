@@ -54,3 +54,6 @@ export const getDestination = (city) => API.get(`/destination/${city}`)
 // Réservations
 export const createBooking = (data) => API.post('/bookings', data)
 export const getBookings = () => API.get('/bookings')
+
+// Image d'un lieu
+export const getPlaceImage = (placeName) => API.get(`/image/${encodeURIComponent(placeName)}`)

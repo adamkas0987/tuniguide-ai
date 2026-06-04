@@ -320,5 +320,22 @@ def get_bookings():
         b['_id'] = str(b['_id'])
     return jsonify(bookings)
 
+# ──────────────────────────────────────────────
+# Images Wikimedia Commons pour un lieu
+# ──────────────────────────────────────────────
+@app.route('/image/<path:place_name>', methods=['GET'])
+def get_place_image(place_name):
+    try:
+        url = "https://en.wikipedia.org/api/rest_v1/page/summary/" + place_name.replace(' ', '_')
+        response = requests.get(url, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            image = data.get('thumbnail', {}).get('source', None)
+            if image:
+                return jsonify({"image": image, "source": "wikipedia"})
+    except:
+        pass
+    return jsonify({"image": None})
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
