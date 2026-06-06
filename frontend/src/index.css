@@ -14,3 +14,8 @@
 }
 
 * { transition: filter 0.3s ease, background-color 0.3s ease, color 0.3s ease; }
+
+/* Sticky navbar — counter-invert in dark mode */
+[data-theme="dark"] .sticky-navbar {
+  filter: invert(1) hue-rotate(180deg) !important;
+}

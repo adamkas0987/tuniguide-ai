@@ -201,6 +201,37 @@ function Result({ tripData: initialTripData }) {
         </div>
       )}
 
+      {/* ── BUDGET WARNING ───────────────────────────────────── */}
+      {tripData.budget_exceeded && (
+        <div style={{
+          maxWidth: '900px',
+          margin: '20px auto 0',
+          padding: '0 24px',
+        }}>
+          <div style={{
+            backgroundColor: '#fef3c7',
+            border: '2px solid #f59e0b',
+            borderRadius: '14px',
+            padding: '16px 20px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '14px',
+          }}>
+            <span style={{ fontSize: '28px', flexShrink: 0 }}>⚠️</span>
+            <div>
+              <div style={{ fontWeight: '700', color: '#92400e', fontSize: '15px', marginBottom: '4px' }}>
+                Budget insuffisant
+              </div>
+              <div style={{ fontSize: '13px', color: '#92400e', lineHeight: '1.6' }}>
+                Aucun voyage disponible pour <strong>{tripData.budget} DT</strong> avec ces paramètres.
+                Le coût estimé du meilleur voyage disponible est de <strong>{tripData.cost_summary.total} DT</strong>.
+                Augmentez votre budget ou réduisez la durée du séjour.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── HERO ─────────────────────────────── */}
       <div style={{
         background: `linear-gradient(135deg, ${accentColor}dd, #1a1a2eee)`,

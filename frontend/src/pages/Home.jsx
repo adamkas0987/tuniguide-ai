@@ -159,21 +159,23 @@ export default function Home({ setTripData }) {
     <div style={{ minHeight: '100vh', backgroundColor: '#f0f4f8' }}>
 
       {/* ── STICKY NAVBAR (appears on scroll) ──────────────────── */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-        backgroundColor: 'white',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.12)',
-        padding: '10px 24px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        transform: scrolled ? 'translateY(0)' : 'translateY(-100%)',
-        transition: 'transform 0.3s ease',
-      }}>
+      <div
+  className="sticky-navbar"
+  style={{
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  zIndex: 1000,
+  backgroundColor: 'white',
+  boxShadow: '0 2px 12px rgba(0,0,0,0.12)',
+  padding: '10px 24px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  transform: scrolled ? 'translateY(0)' : 'translateY(-100%)',
+  transition: 'transform 0.3s ease',
+}}>
         {/* Logo */}
         <div onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }) }}
           style={{ fontSize: '18px', fontWeight: '600', cursor: 'pointer', color: '#1f2937' }}>
