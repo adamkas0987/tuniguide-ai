@@ -9,6 +9,7 @@ from agent import chat_with_agent
 from auth import init_jwt, register_user, login_user, save_trip, get_user_trips, get_profile
 from datetime import datetime
 import base64
+import uuid
 
 app = Flask(__name__)
 CORS(app)
@@ -422,6 +423,26 @@ def get_ratings(place_name):
         "count":   len(ratings),
         "ratings": ratings
     })
+
+# Add this route to app.py
+@app.route('/trips/share', methods=['POST'])
+def share_trip():
+    data = request.json
+    trip_id = str(uuid.uuid4())[:8]  # short ID like "a3f9b2c1"
+    db.shared_trips.insert_one({
+        '_id': trip_id,
+        'trip': data,
+        'created_at': datetime.utcnow()
+    })
+    return jsonify({'share_id': trip_id})
+
+@app.route('/trips/shared/<share_id>', methods=['GET'])
+def get_shared_trip(share_id):
+    doc = db.shared_trips.find_one({'_id': share_id})
+    if not doc:
+        return jsonify({'error': 'Not found'}), 404
+    doc['trip']['_id'] = str(doc['_id'])
+    return jsonify(doc['trip'])
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 const API = axios.create({
-  baseURL: 'https://tuniguide-backend.onrender.com',
+  baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000',
   headers: { 'Content-Type': 'application/json' }
 })
 
@@ -61,3 +61,6 @@ export const getPlaceImage = (placeName) => API.get(`/image/${encodeURIComponent
 // Notation
 export const addRating = (data) => API.post('/ratings', data)
 export const getRatings = (placeName) => API.get(`/ratings/${encodeURIComponent(placeName)}`)
+
+export const shareTrip = (tripData) => API.post('/trips/share', tripData)
+export const getSharedTrip = (shareId) => API.get(`/trips/shared/${shareId}`)
