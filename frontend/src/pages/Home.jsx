@@ -7,12 +7,48 @@ import TunisiaMap from '../components/TunisiaMap'
 import { useTheme } from '../context/ThemeContext'
 
 const CITIES_CONFIG = [
-  { name: 'Tunis',    emoji: '🕌', bg: 'linear-gradient(160deg,#0a2342 0%,#1a4a7a 60%,#0f6e56 100%)', desc: 'Médinas, musées, patrimoine UNESCO' },
-  { name: 'Sousse',   emoji: '🏖️', bg: 'linear-gradient(160deg,#0f6e56 0%,#1a4a7a 60%,#04342c 100%)', desc: 'Plages, ribat, médina fortifiée' },
-  { name: 'Djerba',   emoji: '🌊', bg: 'linear-gradient(160deg,#023e8a 0%,#0077b6 50%,#0a2342 100%)', desc: 'Île paradisiaque, plages cristallines' },
-  { name: 'Kairouan', emoji: '🕍', bg: 'linear-gradient(160deg,#4a1800 0%,#7b2d00 50%,#1a1a2e 100%)', desc: "4ème ville sainte de l'Islam" },
-  { name: 'Sfax',     emoji: '🏺', bg: 'linear-gradient(160deg,#1a3a1a 0%,#2d5a2d 50%,#0a2342 100%)', desc: 'Médina authentique, artisanat local' },
-  { name: 'El Jem',   emoji: '🛕', bg: 'linear-gradient(160deg,#5c2e0b 0%,#8B4513 50%,#1a1a2e 100%)', desc: '3ème plus grand amphithéâtre romain' },
+  {
+    name: 'Tunis',
+    emoji: '🕌',
+    bg: 'linear-gradient(160deg,#0a2342 0%,#1a4a7a 60%,#0f6e56 100%)',
+    image: 'https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?w=400&q=80',
+    desc: 'Médinas, musées, patrimoine UNESCO'
+  },
+  {
+    name: 'Sousse',
+    emoji: '🏖️',
+    bg: 'linear-gradient(160deg,#0f6e56 0%,#1a4a7a 60%,#04342c 100%)',
+    image: 'https://images.unsplash.com/photo-1548813831-2c0e4d8d2a7b?w=400&q=80',
+    desc: 'Plages, ribat, médina fortifiée'
+  },
+  {
+    name: 'Djerba',
+    emoji: '🌊',
+    bg: 'linear-gradient(160deg,#023e8a 0%,#0077b6 50%,#0a2342 100%)',
+    image: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=400&q=80',
+    desc: 'Île paradisiaque, plages cristallines'
+  },
+  {
+    name: 'Kairouan',
+    emoji: '🕍',
+    bg: 'linear-gradient(160deg,#4a1800 0%,#7b2d00 50%,#1a1a2e 100%)',
+    image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&q=80',
+    desc: "4ème ville sainte de l'Islam"
+  },
+  {
+    name: 'Sfax',
+    emoji: '🏺',
+    bg: 'linear-gradient(160deg,#1a3a1a 0%,#2d5a2d 50%,#0a2342 100%)',
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80',
+    desc: 'Médina authentique, artisanat local'
+  },
+  {
+    name: 'El Jem',
+    emoji: '🛕',
+    bg: 'linear-gradient(160deg,#5c2e0b 0%,#8B4513 50%,#1a1a2e 100%)',
+    image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=400&q=80',
+    desc: '3ème plus grand amphithéâtre romain'
+  },
 ]
 
 const TRANSLATIONS = {
@@ -78,6 +114,7 @@ export default function Home({ setTripData }) {
   const [submitting, setSubmitting] = useState(false)
   const [rewardsData, setRewardsData] = useState({ points: 0, level: 'Débutant', level_en: 'Starter' })
   const [scrolled, setScrolled] = useState(false)
+  const [cityCounts, setCityCounts] = useState({})
   const fileRef = useRef()
   const t = TRANSLATIONS[lang]
 
@@ -114,6 +151,20 @@ export default function Home({ setTripData }) {
       getRewardsPoints(token).then(res => setRewardsData(res.data)).catch(() => {})
     }
   }, [user, token])
+
+  useEffect(() => {
+  const fetchCounts = async () => {
+    const result = {}
+    for (const c of ['Tunis', 'Sousse', 'Djerba', 'Kairouan', 'Sfax', 'El Jem']) {
+      try {
+        const res = await getPlaces(c)
+        result[c] = res.data.length
+      } catch {}
+    }
+    setCityCounts(result)
+  }
+  fetchCounts()
+}, [])
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -289,7 +340,7 @@ export default function Home({ setTripData }) {
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '14px', marginBottom: '28px' }}>{t.hero.subtitle}</p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(16px, 4vw, 40px)', marginBottom: '32px', flexWrap: 'wrap' }}>
-            {[['6', lang === 'fr' ? 'Villes' : 'Cities'], ['96+', lang === 'fr' ? 'Lieux' : 'Places'], ['24/7', 'Agent IA'], ['100%', lang === 'fr' ? 'Gratuit' : 'Free']].map(([v, l]) => (
+            {[['6', lang === 'fr' ? 'Villes' : 'Cities'], [`${Object.values(cityCounts).reduce((a, b) => a + b, 0) || '136+'}`, lang === 'fr' ? 'Lieux' : 'Places'], ['24/7', 'Agent IA'], ['100%', lang === 'fr' ? 'Gratuit' : 'Free']].map(([v, l]) => (
               <div key={l} style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '24px', fontWeight: '500', color: '#4ade80' }}>{v}</div>
                 <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', marginTop: '2px' }}>{l}</div>
@@ -414,21 +465,30 @@ export default function Home({ setTripData }) {
       <div style={{ padding: '16px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
           <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937' }}>{t.destinations.title}</div>
-          <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ fontSize: '12px', color: '#1D9E75', cursor: 'pointer' }}>{t.destinations.seeAll} ›</div>
+          <div onClick={() => navigate('/search')} style={{ fontSize: '12px', color: '#1D9E75', cursor: 'pointer' }}>{t.destinations.seeAll} ›</div>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '8px' }}>
           {CITIES_CONFIG.map(city => (
             <div key={city.name} onClick={() => navigate(`/destination/${city.name}`)}
-              style={{ borderRadius: '10px', overflow: 'hidden', cursor: 'pointer', height: '110px', background: city.bg, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '8px', position: 'relative', border: '2px solid transparent', transition: 'all 0.2s' }}
-              onMouseEnter={e => e.currentTarget.style.border = '2px solid #4ade80'}
-              onMouseLeave={e => e.currentTarget.style.border = '2px solid transparent'}
-            >
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)' }} />
-              <div style={{ position: 'relative', zIndex: 2 }}>
-                <div style={{ color: 'white', fontSize: '12px', fontWeight: '500' }}>{city.emoji} {city.name}</div>
-                <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: '10px' }}>{cities.includes(city.name) ? `20 ${t.destinations.places}` : ''}</div>
-              </div>
-            </div>
+  style={{ borderRadius: '10px', overflow: 'hidden', cursor: 'pointer', height: '140px', position: 'relative', border: '2px solid transparent', transition: 'all 0.2s' }}
+  onMouseEnter={e => e.currentTarget.style.border = '2px solid #4ade80'}
+  onMouseLeave={e => e.currentTarget.style.border = '2px solid transparent'}
+>
+  {/* Real photo */}
+  <img
+    src={city.image}
+    alt={city.name}
+    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+    onError={e => { e.target.style.display = 'none' }}
+  />
+  {/* Dark overlay */}
+  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 60%)' }} />
+  {/* Text */}
+  <div style={{ position: 'absolute', bottom: '8px', left: '8px', zIndex: 2 }}>
+    <div style={{ color: 'white', fontSize: '13px', fontWeight: '600', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>{city.emoji} {city.name}</div>
+    <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: '11px' }}>{cityCounts[city.name] ? `${cityCounts[city.name]} ${t.destinations.places}` : ''}</div>
+  </div>
+</div>
           ))}
         </div>
       </div>
@@ -441,7 +501,7 @@ export default function Home({ setTripData }) {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
           {RECOMMENDED.map((item, i) => (
-            <div key={i} onClick={() => handleRecommendedClick(item)}
+            <div key={i} onClick={() => handleRecommendedClick(item)}  
               style={{ border: '0.5px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
               onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
               onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
