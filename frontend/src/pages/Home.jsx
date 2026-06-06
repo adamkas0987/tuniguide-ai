@@ -5,6 +5,7 @@ import { generateTrip, getCities, getWeather, getReviews, postReview, getRewards
 import { useAuth } from '../context/AuthContext'
 import TunisiaMap from '../components/TunisiaMap'
 import { useTheme } from '../context/ThemeContext'
+import { generateTrip, getCities, getWeather, getReviews, postReview, getRewardsPoints, getPlaces } from '../services/api.js'
 
 const CITIES_CONFIG = [
   {
