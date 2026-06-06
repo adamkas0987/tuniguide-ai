@@ -1,6 +1,6 @@
 // src/App.jsx
 import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
@@ -16,29 +16,37 @@ import Search from './pages/Search'
 import Profile from './pages/Profile'
 import { ThemeProvider } from './context/ThemeContext'
 
+function AppContent({ tripData, setTripData }) {
+  const location = useLocation()
+  const hideNavbar = location.pathname === '/'
+
+  return (
+    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+      {!hideNavbar && <Navbar />}
+      <Routes>
+        <Route path="/"          element={<Home setTripData={setTripData} />} />
+        <Route path="/result"    element={<Result tripData={tripData} />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/login"     element={<Login />} />
+        <Route path="/register"  element={<Register />} />
+        <Route path="/history"   element={<History />} />
+        <Route path="/rewards"   element={<Rewards />} />
+        <Route path="/destination/:city" element={<Destination />} />
+        <Route path="/booking/:type/:name/:city/:price" element={<Booking />} />
+        <Route path="/search"    element={<Search />} />
+        <Route path="/profile"   element={<Profile />} />
+      </Routes>
+    </div>
+  )
+}
+
 function App() {
   const [tripData, setTripData] = useState(null)
-
   return (
     <ThemeProvider>
       <AuthProvider>
         <Router>
-          <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
-            <Navbar />
-            <Routes>
-              <Route path="/"          element={<Home setTripData={setTripData} />} />
-              <Route path="/result"    element={<Result tripData={tripData} />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/login"     element={<Login />} />
-              <Route path="/register"  element={<Register />} />
-              <Route path="/history"   element={<History />} />
-              <Route path="/rewards"   element={<Rewards />} />
-              <Route path="/destination/:city" element={<Destination />} />
-              <Route path="/booking/:type/:name/:city/:price" element={<Booking />} />
-              <Route path="/search"    element={<Search />} />
-              <Route path="/profile"   element={<Profile />} />
-            </Routes>
-          </div>
+          <AppContent tripData={tripData} setTripData={setTripData} />
         </Router>
       </AuthProvider>
     </ThemeProvider>

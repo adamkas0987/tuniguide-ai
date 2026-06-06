@@ -12,20 +12,20 @@ const CITIES_CONFIG = [
   { name: 'Djerba',   emoji: '🌊', bg: 'linear-gradient(160deg,#023e8a 0%,#0077b6 50%,#0a2342 100%)', desc: 'Île paradisiaque, plages cristallines' },
   { name: 'Kairouan', emoji: '🕍', bg: 'linear-gradient(160deg,#4a1800 0%,#7b2d00 50%,#1a1a2e 100%)', desc: "4ème ville sainte de l'Islam" },
   { name: 'Sfax',     emoji: '🏺', bg: 'linear-gradient(160deg,#1a3a1a 0%,#2d5a2d 50%,#0a2342 100%)', desc: 'Médina authentique, artisanat local' },
-  { name: 'El Jem',   emoji: '🏛️', bg: 'linear-gradient(160deg,#5c2e0b 0%,#8B4513 50%,#1a1a2e 100%)', desc: '3ème plus grand amphithéâtre romain' },
+  { name: 'El Jem',   emoji: '🛕', bg: 'linear-gradient(160deg,#5c2e0b 0%,#8B4513 50%,#1a1a2e 100%)', desc: '3ème plus grand amphithéâtre romain' },
 ]
 
 const TRANSLATIONS = {
   fr: {
     nav: { home: 'Accueil', search: 'Rechercher', dashboard: 'Dashboard', rewards: 'Récompenses', trips: 'Mes voyages', login: 'Connexion', register: "S'inscrire" },
     hero: { badge: 'Agent IA disponible 24h/24', title1: 'Explorez la', title2: "avec l'Intelligence Artificielle", subtitle: 'Itinéraires personnalisés • Météo en temps réel • Agent IA 24/7' },
-    search: { plan: 'Planifier', hotels: 'Hôtels', activities: 'Activités', agent: 'Agent IA', dest: 'Destination', budget: 'Budget', duration: 'Durée', type: 'Type', generate: 'Générer', choose: 'Choisir une ville...', days: 'jours', types: { culture: '🏛️ Culture', beach: '🏖️ Plage', relax: '🌿 Relax', adventure: '🏕️ Aventure' } },
+    search: { plan: 'Planifier', hotels: 'Hôtels', activities: 'Activités', agent: 'Agent IA', dest: 'Destination', budget: 'Budget', duration: 'Durée', type: 'Type', generate: 'Générer', choose: 'Choisir une ville...', days: 'jours', types: { culture: '🛕 Culture', beach: '🏖️ Plage', relax: '🌿 Relax', adventure: '🏕️ Aventure' } },
     rewards: { title: '🏆 TuniGuide Récompenses', desc: 'Gagnez des points à chaque voyage et commentaire. Échangez contre des réductions.', btn: 'Rejoindre le programme', points: 'points disponibles', level: 'Niveau Or ✨' },
     destinations: { title: 'Destinations populaires', seeAll: 'Voir tout', places: 'lieux' },
     itineraries: { title: 'Itinéraires recommandés', seeAll: 'Voir tout', from: 'dès', per: '/ personne', click: 'Cliquez pour planifier' },
     reviews: { title: 'Avis de la communauté', seeAll: 'Voir tout', share: 'Partagez votre expérience', place: 'Lieu visité...', comment: 'Votre commentaire...', publish: 'Publier', upload: 'Ajouter des photos', noReviews: 'Soyez le premier à laisser un avis !' },
     features: { title: 'Pourquoi choisir TuniGuide AI ?' },
-    footer: { about: 'À propos', services: 'Autres services', contact: 'Nous contacter', rights: '© 2026 TuniGuide AI — ISIm Sfax. Tous droits réservés.' },
+    footer: { about: 'À propos', services: 'Autres services', contact: 'Nous contacter', rights: '© 2026 TuniGuide AI – ISIm Sfax. Tous droits réservés.' },
     hotels: { title: 'Hôtels recommandés', desc: 'Générez un voyage pour voir les hôtels disponibles', btn: 'Planifier un voyage' },
     activities: { title: 'Activités populaires', desc: 'Générez un voyage pour voir les activités disponibles', btn: 'Planifier un voyage' },
     agent: { title: 'Agent IA TuniGuide', desc: 'Posez vos questions sur votre voyage en Tunisie', btn: "Ouvrir l'Agent IA" },
@@ -37,13 +37,13 @@ const TRANSLATIONS = {
   en: {
     nav: { home: 'Home', search: 'Search', dashboard: 'Dashboard', rewards: 'Rewards', trips: 'My trips', login: 'Login', register: 'Sign up' },
     hero: { badge: 'AI Agent available 24/7', title1: 'Explore', title2: 'with Artificial Intelligence', subtitle: 'Personalized itineraries • Real-time weather • AI Agent 24/7' },
-    search: { plan: 'Plan', hotels: 'Hotels', activities: 'Activities', agent: 'AI Agent', dest: 'Destination', budget: 'Budget', duration: 'Duration', type: 'Type', generate: 'Generate', choose: 'Choose a city...', days: 'days', types: { culture: '🏛️ Culture', beach: '🏖️ Beach', relax: '🌿 Relax', adventure: '🏕️ Adventure' } },
+    search: { plan: 'Plan', hotels: 'Hotels', activities: 'Activities', agent: 'AI Agent', dest: 'Destination', budget: 'Budget', duration: 'Duration', type: 'Type', generate: 'Generate', choose: 'Choose a city...', days: 'days', types: { culture: '🛕 Culture', beach: '🏖️ Beach', relax: '🌿 Relax', adventure: '🏕️ Adventure' } },
     rewards: { title: '🏆 TuniGuide Rewards', desc: 'Earn points with every trip and review. Redeem for exclusive discounts.', btn: 'Join the program', points: 'points available', level: 'Gold Level ✨' },
     destinations: { title: 'Popular destinations', seeAll: 'See all', places: 'places' },
     itineraries: { title: 'Recommended itineraries', seeAll: 'See all', from: 'from', per: '/ person', click: 'Click to plan' },
     reviews: { title: 'Community reviews', seeAll: 'See all', share: 'Share your experience', place: 'Place visited...', comment: 'Your comment...', publish: 'Publish', upload: 'Add photos', noReviews: 'Be the first to leave a review!' },
     features: { title: 'Why choose TuniGuide AI?' },
-    footer: { about: 'About', services: 'Other services', contact: 'Contact us', rights: '© 2026 TuniGuide AI — ISIm Sfax. All rights reserved.' },
+    footer: { about: 'About', services: 'Other services', contact: 'Contact us', rights: '© 2026 TuniGuide AI – ISIm Sfax. All rights reserved.' },
     hotels: { title: 'Recommended hotels', desc: 'Generate a trip to see available hotels', btn: 'Plan a trip' },
     activities: { title: 'Popular activities', desc: 'Generate a trip to see available activities', btn: 'Plan a trip' },
     agent: { title: 'TuniGuide AI Agent', desc: 'Ask any question about your trip to Tunisia', btn: 'Open AI Agent' },
@@ -55,9 +55,9 @@ const TRANSLATIONS = {
 }
 
 const RECOMMENDED = [
-  { emoji: '🕌', bg: '#e8f5e9', title_fr: 'Culture & Histoire — Tunis', title_en: 'Culture & History — Tunis', meta_fr: '3 jours • Médinas, musées', meta_en: '3 days • Medinas, museums', price: 200, type: 'culture', city: 'Tunis', days: 3 },
-  { emoji: '🏖️', bg: '#e3f2fd', title_fr: 'Plage & Détente — Djerba', title_en: 'Beach & Relaxation — Djerba', meta_fr: '5 jours • Plages, resorts', meta_en: '5 days • Beaches, resorts', price: 350, type: 'beach', city: 'Djerba', days: 5 },
-  { emoji: '🏛️', bg: '#fff8e1', title_fr: 'Antiquités — El Jem', title_en: 'Antiquities — El Jem', meta_fr: '2 jours • Amphithéâtre', meta_en: '2 days • Amphitheater', price: 150, type: 'culture', city: 'El Jem', days: 2 },
+  { emoji: '🕌', bg: '#e8f5e9', title_fr: 'Culture & Histoire – Tunis', title_en: 'Culture & History – Tunis', meta_fr: '3 jours • Médinas, musées', meta_en: '3 days • Medinas, museums', price: 200, type: 'culture', city: 'Tunis', days: 3 },
+  { emoji: '🏖️', bg: '#e3f2fd', title_fr: 'Plage & Détente – Djerba', title_en: 'Beach & Relaxation – Djerba', meta_fr: '5 jours • Plages, resorts', meta_en: '5 days • Beaches, resorts', price: 350, type: 'beach', city: 'Djerba', days: 5 },
+  { emoji: '🛕', bg: '#fff8e1', title_fr: 'Antiquités – El Jem', title_en: 'Antiquities – El Jem', meta_fr: '2 jours • Amphithéâtre', meta_en: '2 days • Amphitheater', price: 150, type: 'culture', city: 'El Jem', days: 2 },
 ]
 
 export default function Home({ setTripData }) {
@@ -77,8 +77,16 @@ export default function Home({ setTripData }) {
   const [photoPreview, setPhotoPreview] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [rewardsData, setRewardsData] = useState({ points: 0, level: 'Débutant', level_en: 'Starter' })
+  const [scrolled, setScrolled] = useState(false)
   const fileRef = useRef()
   const t = TRANSLATIONS[lang]
+
+  // ── Sticky navbar on scroll ───────────────────────────────────
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 80)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   useEffect(() => {
     getCities().then(res => setCities(res.data)).catch(() => {})
@@ -150,10 +158,73 @@ export default function Home({ setTripData }) {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f0f4f8' }}>
 
-      {/* ── HERO ────────────────────────────── */}
+      {/* ── STICKY NAVBAR (appears on scroll) ──────────────────── */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        backgroundColor: 'white',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.12)',
+        padding: '10px 24px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        transform: scrolled ? 'translateY(0)' : 'translateY(-100%)',
+        transition: 'transform 0.3s ease',
+      }}>
+        {/* Logo */}
+        <div onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+          style={{ fontSize: '18px', fontWeight: '600', cursor: 'pointer', color: '#1f2937' }}>
+          Tuni<span style={{ color: '#1D9E75' }}>Guide</span> AI
+        </div>
+
+        {/* Links */}
+        <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+          {[
+            { key: 'home', path: '/' },
+            { key: 'search', path: '/search' },
+            { key: 'dashboard', path: '/dashboard' },
+            { key: 'rewards', path: '/rewards' },
+            ...(user ? [{ key: 'trips', path: '/history' }] : []),
+          ].map(item => (
+            <span key={item.key} onClick={() => navigate(item.path)}
+              style={{ color: '#4b5563', fontSize: '13px', cursor: 'pointer', padding: '6px 10px', borderRadius: '6px', fontWeight: '500' }}
+              onMouseEnter={e => { e.target.style.background = '#f3f4f6'; e.target.style.color = '#1D9E75' }}
+              onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#4b5563' }}
+            >
+              {t.nav[item.key]}
+            </span>
+          ))}
+        </div>
+
+        {/* Auth buttons */}
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button onClick={toggleTheme} style={{ background: '#f3f4f6', border: 'none', borderRadius: '20px', padding: '6px 10px', fontSize: '14px', cursor: 'pointer' }}>
+            {theme === 'light' ? '🌙' : '☀️'}
+          </button>
+          {user ? (
+            <span onClick={() => navigate('/profile')} style={{ color: '#1D9E75', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+              👤 {user.name}
+            </span>
+          ) : (
+            <>
+              <button onClick={() => navigate('/login')} style={{ background: 'white', color: '#374151', border: '1px solid #e5e7eb', borderRadius: '20px', padding: '7px 14px', fontSize: '13px', cursor: 'pointer', fontWeight: '500' }}>
+                {t.nav.login}
+              </button>
+              <button onClick={() => navigate('/register')} style={{ background: '#1D9E75', color: 'white', border: 'none', borderRadius: '20px', padding: '7px 14px', fontSize: '13px', cursor: 'pointer', fontWeight: '500' }}>
+                {t.nav.register}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* ── HERO ─────────────────────────────────────────────────── */}
       <div style={{ background: bg.bg, transition: 'background 1s ease' }}>
 
-        {/* Navbar responsive */}
+        {/* Hero navbar (always visible at top) */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.1)', flexWrap: 'wrap', gap: '8px' }}>
           <div onClick={() => navigate('/')} style={{ color: 'white', fontSize: '20px', fontWeight: '500', cursor: 'pointer' }}>
             Tuni<span style={{ color: '#4ade80' }}>Guide</span> AI
@@ -310,7 +381,7 @@ export default function Home({ setTripData }) {
         </div>
       </div>
 
-      {/* ── REWARDS ─────────────────────────── */}
+      {/* ── REWARDS ───────────────────────────────────────────────── */}
       <div style={{ padding: '16px', background: '#f9fafb' }}>
         <div style={{ background: 'linear-gradient(135deg,#1D9E75,#0f6e56)', borderRadius: '14px', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
           <div>
@@ -332,12 +403,12 @@ export default function Home({ setTripData }) {
         </div>
       </div>
 
-      {/* ── CARTE INTERACTIVE ───────────────── */}
+      {/* ── CARTE INTERACTIVE ─────────────────────────────────────── */}
       <div style={{ padding: '16px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
         <TunisiaMap lang={lang} />
       </div>
 
-      {/* ── DESTINATIONS ────────────────────── */}
+      {/* ── DESTINATIONS ──────────────────────────────────────────── */}
       <div style={{ padding: '16px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
           <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937' }}>{t.destinations.title}</div>
@@ -360,7 +431,7 @@ export default function Home({ setTripData }) {
         </div>
       </div>
 
-      {/* ── ITINERAIRES ─────────────────────── */}
+      {/* ── ITINERAIRES ───────────────────────────────────────────── */}
       <div style={{ padding: '16px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
           <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937' }}>{t.itineraries.title}</div>
@@ -387,7 +458,7 @@ export default function Home({ setTripData }) {
         </div>
       </div>
 
-      {/* ── AVIS ────────────────────────────── */}
+      {/* ── AVIS ──────────────────────────────────────────────────── */}
       <div style={{ padding: '16px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
         <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937', marginBottom: '14px' }}>{t.reviews.title}</div>
         <div style={{ border: '0.5px solid #e5e7eb', borderRadius: '12px', padding: '16px', marginBottom: '16px', background: '#f9fafb' }}>
@@ -443,7 +514,7 @@ export default function Home({ setTripData }) {
         )}
       </div>
 
-      {/* ── FEATURES ────────────────────────── */}
+      {/* ── FEATURES ──────────────────────────────────────────────── */}
       <div style={{ padding: '16px', background: 'white', borderBottom: '6px solid #f0f4f8' }}>
         <div style={{ fontSize: '16px', fontWeight: '500', color: '#1f2937', marginBottom: '14px' }}>{t.features.title}</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
@@ -465,7 +536,7 @@ export default function Home({ setTripData }) {
         </div>
       </div>
 
-      {/* ── FOOTER ──────────────────────────── */}
+      {/* ── FOOTER ────────────────────────────────────────────────── */}
       <div style={{ background: '#0a1628', padding: '24px 16px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '20px', marginBottom: '20px' }}>
           <div>
