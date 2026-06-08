@@ -1,7 +1,6 @@
 // src/pages/Home.jsx
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { generateTrip, getCities, getWeather, getReviews, postReview, getRewardsPoints } from '../services/api.js'
 import { useAuth } from '../context/AuthContext'
 import TunisiaMap from '../components/TunisiaMap'
 import { useTheme } from '../context/ThemeContext'
